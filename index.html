@@ -83,5 +83,70 @@
     setInterval(updateClock, 1000);
     updateClock();
   </script>
+  <script>
+// --- CODICE PER CARICARE I CORSI DAL GOOGLE SHEET ---
+function parseTime(t) {
+  const [h,m] = t.split(":").map(Number);
+  return h*60 + m;
+}
+function formatCell(cell) {
+  if (!cell) return "";
+  if (cell.f) return cell.f;
+  if (typeof cell.v === 'string') return cell.v;
+  if (typeof cell.v === 'number') return cell.v.toString();
+  return "";
+}
+
+async function loadCourses() {
+  const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR_ppEu9INE0kuR0Hl9Il-Cqym40HrNOOuBKNWY9PK1fY4oGipwh0ZPS-qDvLElGxXi7pZrYUT_6JyG/pubhtml';
+  const res = await fetch(sheetUrl);
+  const text = await res.text();
+  const json = JSON.parse(text.substring(47).slice(0,-2));
+  const rows = json.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ""));
+
+  const now = new Date();
+  const day = now.toLocaleDateString('it-IT',{weekday:'long'});
+  const currentTime = now.getHours()*60 + now.getMinutes();
+
+  const todayCourses = rows.filter(r => r[0].toLowerCase() === day.toLowerCase());
+  const parsedCourses = todayCourses
+    .filter(r => r[0].toLowerCase() !== 'giorno')
+    .map(r => {
+      const ingresso = parseTime(r[2]);
+      const inizio = parseTime(r[3]);
+      return {
+        attivita: r[1],
+        oraIngresso: r[2],
+        oraInizio: r[3],
+        durata: parseInt(r[4] || 60),
+        note: r[5],
+        ingressoMin: ingresso,
+        inizioMin: inizio
+      };
+    }).sort((a,b)=>a.ingressoMin-b.ingressoMin);
+
+  const container = document.getElementById("courses");
+  container.innerHTML = "";
+
+  parsedCourses.forEach(corso=>{
+    const timeToStart = corso.ingressoMin - currentTime;
+    let style = "gray";
+    if(timeToStart <=0 && timeToStart > -corso.durata) style="green";
+    else if(timeToStart<=5 && timeToStart>0) style="yellow";
+
+    const div = document.createElement("div");
+    div.style.border="1px solid #ccc";
+    div.style.padding="15px";
+    div.style.marginBottom="10px";
+    div.style.borderRadius="8px";
+    div.style.backgroundColor = style==="green"? "#d4edda" : style==="yellow"? "#fff3cd" : "#eeeeee";
+    div.innerHTML = `<strong>${corso.attivita}</strong> | Ingresso: ${corso.oraIngresso} | Inizio: ${corso.oraInizio} <br>${corso.note || ""}`;
+    container.appendChild(div);
+  });
+}
+
+loadCourses();
+setInterval(loadCourses, 60000); // aggiorna ogni minuto
+</script>
 </body>
 </html>
