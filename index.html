@@ -3,23 +3,82 @@
 <head>
   <meta charset="UTF-8">
   <title>Orari Piscina</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f0f8ff;
+      color: #003366;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #ffffff;
+      padding: 10px 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    header img {
+      max-height: 100px;
+    }
+    .datetime {
+      text-align: right;
+      font-size: 2em;
+    }
+    .datetime .time {
+      font-weight: bold;
+      font-size: 2.5em;
+    }
+    .datetime .date {
+      font-size: 2em;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 40px;
+      padding: 20px;
+      flex-wrap: wrap;
+    }
+    #courses, #notes {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      min-width: 300px;
+    }
+    #courses {
+      flex: 2;
+    }
+    #notes {
+      flex: 1;
+    }
+  </style>
 </head>
 <body>
   <header>
-    <img src="CF Lampugnano blu xl.png" alt="Logo Piscina" style="max-height: 100px;">
-    <h1>Orari Corsi Piscina</h1>
-    <div id="clock">--:--</div>
+    <img src="CF Lampugnano blu xl.png" alt="Logo Piscina">
+    <div class="datetime">
+      <div class="time" id="clock">--:--</div>
+      <div class="date" id="date">--/--/----</div>
+    </div>
   </header>
 
-  <div id="courses">Caricamento corsi...</div>
-  <div id="notes">Caricamento note...</div>
+  <div class="container">
+    <div id="courses">Caricamento corsi...</div>
+    <div id="notes">Caricamento note...</div>
+  </div>
 
   <script>
     function updateClock() {
       const now = new Date();
       const h = now.getHours().toString().padStart(2,'0');
       const m = now.getMinutes().toString().padStart(2,'0');
+      const d = now.getDate().toString().padStart(2,'0');
+      const month = (now.getMonth()+1).toString().padStart(2,'0');
+      const year = now.getFullYear();
       document.getElementById("clock").textContent = `${h}:${m}`;
+      document.getElementById("date").textContent = `${d}/${month}/${year}`;
     }
     setInterval(updateClock, 1000);
     updateClock();
