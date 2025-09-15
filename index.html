@@ -98,7 +98,7 @@ function formatCell(cell) {
 }
 
 async function loadCourses() {
-  const sheetUrl = 'https://docs.google.com/spreadsheets/d/2PACX-1vR_ppEu9INE0kuR0Hl9Il-Cqym40HrNOOuBKNWY9PK1fY4oGipwh0ZPS-qDvLElGxXi7pZrYUT_6JyG/gviz/tq?tqx=out:json&sheet=Corsi';
+  const sheetUrl = 'https://docs.google.com/spreadsheets/d/1vR_ppEu9INE0kuR0Hl9Il/gviz/tq?tqx=out:json&sheet=Corsi'
   const res = await fetch(sheetUrl);
   const text = await res.text();
   const json = JSON.parse(text.substring(47).slice(0,-2));
