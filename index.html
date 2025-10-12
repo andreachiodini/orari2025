@@ -87,6 +87,7 @@
     }
     .course .orario {
       font-weight: 700; /* bold solo per l'orario */
+      margin-left: 6px; /* piccolo spazio */
     }
 
     /* Colori stato */
@@ -197,8 +198,8 @@
             div.className = `course ${style}`;
             div.innerHTML = `
               <div class="attivita">${corso.attivita}</div>
-              <div class="ingresso">Ingresso: <span class="orario">${corso.oraIngresso}</span></div>
-              <div class="inizio">Inizio: <span class="orario">${corso.oraInizio}</span></div>
+              <div class="ingresso">Ingresso <span class="orario">${corso.oraIngresso}</span></div>
+              <div class="inizio">Inizio <span class="orario">${corso.oraInizio}</span></div>
             `;
             coursesBox.appendChild(div);
           });
