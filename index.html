@@ -63,7 +63,7 @@
       border-radius: 8px;
       overflow: hidden;
       margin-bottom: 12px;
-      font-size: 1.8em;   /* stessa dimensione di Attività e Note */
+      font-size: 1.8em;
       font-weight: 500;
     }
     .course div {
@@ -73,16 +73,20 @@
       justify-content: center;
     }
     .course .attivita {
-      flex: 2;                     /* più larga */
+      flex: 2;
       justify-content: flex-start;
       font-weight: 700;
       color: #003366;
     }
-    .course .ingresso, .course .inizio {
+    .course .ingresso,
+    .course .inizio {
       flex: 1;
       text-align: center;
-      border-left: 2px solid rgba(0,0,0,0.1); /* linee verticali divisorie */
-      font-weight: 700;
+      border-left: 2px solid rgba(0,0,0,0.1);
+      font-weight: 400; /* normale per etichetta */
+    }
+    .course .orario {
+      font-weight: 700; /* bold solo per l'orario */
     }
 
     /* Colori stato */
@@ -92,7 +96,7 @@
 
     /* --- NOTE GENERALI --- */
     #notes p {
-      font-size: 1.8em;  /* uguale ai corsi */
+      font-size: 1.8em;
       margin: 0 0 10px;
     }
   </style>
@@ -159,13 +163,12 @@
         const currentTime = now.getHours() * 60 + now.getMinutes();
         const day = now.toLocaleDateString('it-IT', { weekday: 'long' }).toLowerCase();
 
-        // Mappa righe -> oggetti + filtra per oggi
         let parsed = rowsC
-          .filter(r => (r[0] || '').toLowerCase() === day)   // Giorno
+          .filter(r => (r[0] || '').toLowerCase() === day)
           .map(r => {
-            const ingressoMin = parseTime(r[2]);            // Ingresso HH:MM
-            const inizioMin   = parseTime(r[3]);            // Inizio HH:MM (se serve in futuro)
-            const durata      = Number.parseInt(r[4]) || 60; // default 60'
+            const ingressoMin = parseTime(r[2]);
+            const inizioMin   = parseTime(r[3]);
+            const durata      = Number.parseInt(r[4]) || 60;
             return {
               attivita: r[1] || '',
               oraIngresso: r[2] || '',
@@ -175,9 +178,7 @@
               inizioMin
             };
           })
-          // Rimuovi corsi già finiti: se l'orario attuale è > ingresso + durata
           .filter(c => Number.isFinite(c.ingressoMin) && currentTime <= (c.ingressoMin + c.durata))
-          // Ordina per orario di ingresso
           .sort((a, b) => a.ingressoMin - b.ingressoMin);
 
         const coursesBox = document.getElementById('courses');
@@ -189,15 +190,15 @@
           parsed.forEach(corso => {
             const timeToStart = corso.ingressoMin - currentTime;
             let style = 'gray';
-            if (timeToStart <= 0 && timeToStart > -corso.durata) style = 'green';       // in corso
-            else if (timeToStart <= 5 && timeToStart > 0)        style = 'yellow';      // in arrivo
+            if (timeToStart <= 0 && timeToStart > -corso.durata) style = 'green';
+            else if (timeToStart <= 5 && timeToStart > 0)        style = 'yellow';
 
             const div = document.createElement('div');
             div.className = `course ${style}`;
             div.innerHTML = `
               <div class="attivita">${corso.attivita}</div>
-              <div class="ingresso">Ingresso: ${corso.oraIngresso}</div>
-              <div class="inizio">Inizio: ${corso.oraInizio}</div>
+              <div class="ingresso">Ingresso: <span class="orario">${corso.oraIngresso}</span></div>
+              <div class="inizio">Inizio: <span class="orario">${corso.oraInizio}</span></div>
             `;
             coursesBox.appendChild(div);
           });
@@ -223,7 +224,7 @@
     }
 
     loadAll();
-    setInterval(loadAll, 60000); // aggiorna ogni minuto
+    setInterval(loadAll, 60000);
   </script>
 </body>
 </html>
