@@ -23,12 +23,12 @@
       background-color: #ffffff;
       padding: 10px 20px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      height: 120px; /* altezza fissa header */
+      height: 120px; /* blocco header fisso */
     }
 
     header img {
       height: 100%;       /* mantiene altezza header */
-      width: auto;        /* ingrandisce proporzionalmente */
+      width: auto;        /* ingrandisce proporzionalmente il logo */
       max-width: 250px;   /* limite larghezza */
       object-fit: contain;
     }
@@ -66,8 +66,13 @@
       min-width: 300px;
     }
 
-    #courses { flex: 2; }
-    #notes { flex: 1; }
+    #courses {
+      flex: 2;
+    }
+
+    #notes {
+      flex: 1;
+    }
 
     .course {
       border: 1px solid #ddd;
@@ -78,14 +83,23 @@
       font-weight: 500;
     }
 
-    .note {
-      font-size: 1.6em;
-      margin-bottom: 12px;
+    .course-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
     }
+
+    .course-row div {
+      padding: 0 5px;
+    }
+
+    .course-activity { flex: 2; }
+    .course-ingresso, .course-inizio { flex: 1; text-align: center; }
+    .course-note { margin-top: 8px; font-weight: 400; }
   </style>
 </head>
 <body>
-
   <header>
     <img src="CF Lampugnano blu xl.png" alt="Logo Piscina">
     <div class="datetime">
@@ -130,7 +144,6 @@
       return "";
     }
 
-    // Caricamento corsi
     async function loadCourses() {
       const sheetUrl = 'https://docs.google.com/spreadsheets/d/1dcs1X7x84g69f14m9Sl2KmqZUbCI6lLBBfi3QCMNqWI/gviz/tq?tqx=out:json&sheet=Corsi';
 
@@ -139,6 +152,7 @@
         const text = await res.text();
         const json = JSON.parse(text.substring(47).slice(0, -2));
         const rows = json.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ""));
+        console.log("Dati caricati dal foglio:", rows);
 
         const now = new Date();
         const day = now.toLocaleDateString('it-IT', { weekday: 'long' });
@@ -172,13 +186,24 @@
         parsedCourses.forEach(corso => {
           const timeToStart = corso.ingressoMin - currentTime;
           let style = "gray";
-          if (timeToStart <= 0 && timeToStart > -corso.durata) style = "green";
-          else if (timeToStart <= 5 && timeToStart > 0) style = "yellow";
+          if(timeToStart <= 0 && timeToStart > -corso.durata) style = "green";
+          else if(timeToStart <= 5 && timeToStart > 0) style = "yellow";
 
           const div = document.createElement("div");
           div.className = "course";
-          div.style.backgroundColor = style === "green" ? "#d4edda" : style === "yellow" ? "#fff3cd" : "#eeeeee";
-          div.innerHTML = `<strong>${corso.attivita}</strong> | Ingresso: ${corso.oraIngresso} | Inizio: ${corso.oraInizio} <br>${corso.note || ""}`;
+          div.style.backgroundColor = style === "green" ? "#d4edda" 
+                                   : style === "yellow" ? "#fff3cd" 
+                                   : "#eeeeee";
+
+          div.innerHTML = `
+            <div class="course-row">
+              <div class="course-activity">${corso.attivita}</div>
+              <div class="course-ingresso">Ingresso: ${corso.oraIngresso}</div>
+              <div class="course-inizio">Inizio: ${corso.oraInizio}</div>
+            </div>
+            ${corso.note ? `<div class="course-note">${corso.note}</div>` : ""}
+          `;
+
           container.appendChild(div);
         });
 
@@ -190,38 +215,6 @@
 
     loadCourses();
     setInterval(loadCourses, 60000);
-
-    // Caricamento note generali
-    async function loadNotes() {
-      const sheetUrl = 'https://docs.google.com/spreadsheets/d/1dcs1X7x84g69f14m9Sl2KmqZUbCI6lLBBfi3QCMNqWI/gviz/tq?tqx=out:json&sheet=Note';
-
-      try {
-        const res = await fetch(sheetUrl);
-        const text = await res.text();
-        const json = JSON.parse(text.substring(47).slice(0, -2));
-        const rows = json.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ""));
-
-        const container = document.getElementById("notes");
-        container.innerHTML = "";
-
-        rows.forEach(r => {
-          if (r[0]) {
-            const div = document.createElement("div");
-            div.className = "note";
-            div.textContent = r[0];
-            container.appendChild(div);
-          }
-        });
-
-      } catch(e) {
-        console.error("Errore nel caricamento delle note:", e);
-        document.getElementById("notes").textContent = "⚠️ Impossibile caricare le note.";
-      }
-    }
-
-    loadNotes();
-    setInterval(loadNotes, 60000);
   </script>
-
 </body>
 </html>
