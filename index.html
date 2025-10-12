@@ -27,7 +27,7 @@
       background-color: #ffffff;
       padding: 10px 20px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      height: 140px; /* NON cambiare altezza */
+      height: 140px;           /* altezza fissa */
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 1000;
@@ -39,8 +39,8 @@
       object-fit: contain;
     }
     .datetime { text-align: right; }
-    .datetime .time { font-weight: 700; font-size: 80px; }   /* Ora 80px bold */
-    .datetime .date { font-weight: 500; font-size: 50px; color: #004080; } /* Data 50px */
+    .datetime .time { font-weight: 700; font-size: 80px; }   /* Ora */
+    .datetime .date { font-weight: 500; font-size: 50px; color: #004080; } /* Data */
 
     /* ====== CONTENUTO ====== */
     .container {
@@ -53,7 +53,7 @@
       padding-bottom: 100px;/* spazio per footer fisso */
     }
     #courses {
-      background-color: transparent;
+      background-color: transparent; /* mostra l'azzurro dietro */
       padding: 0;
       width: 100%;
       margin-top: 6px;
@@ -77,7 +77,7 @@
     .course .attivita {
       flex: 2;
       justify-content: flex-start;
-      font-size: 60px;      /* Attività 60px bold */
+      font-size: 60px;   /* Attività */
       font-weight: 700;
       color: #003366;
     }
@@ -86,12 +86,12 @@
       flex: 1;
       text-align: center;
       border-left: 2px solid rgba(0,0,0,0.1);
-      font-size: 60px;      /* Etichette 60px normal */
+      font-size: 60px;   /* Etichette */
       font-weight: 400;
       white-space: nowrap;
     }
     .course .orario {
-      font-size: 60px;      /* Orari 60px bold */
+      font-size: 60px;   /* Orari */
       font-weight: 700;
       margin-left: 6px;
     }
@@ -130,7 +130,7 @@
     .ticker__content {
       display: inline-block;
       padding-right: 60px; /* spazio tra le copie */
-      font-size: 50px;     /* Note 50px */
+      font-size: 50px;     /* Note */
       font-weight: 500;
       color: #003366;
       line-height: 1.3;
@@ -241,11 +241,15 @@
         if (parsed.length === 0) {
           coursesBox.textContent = 'Nessun corso previsto (o corsi di oggi già conclusi).';
         } else {
-          parsed.forEach(corso => {
+          /* ====== MOSTRA SOLO I PRIMI 5 CORSI ====== */
+          const visible = parsed.slice(0, 5);
+
+          visible.forEach(corso => {
             const timeToStart = corso.ingressoMin - currentTime;
             let style = 'gray';
             if (timeToStart <= 0 && timeToStart > -corso.durata) style = 'green';   // in corso
             else if (timeToStart <= 5 && timeToStart > 0)        style = 'yellow';  // sta per iniziare (5')
+
             const div = document.createElement('div');
             div.className = `course ${style}`;
             div.innerHTML = `
@@ -255,6 +259,16 @@
             `;
             coursesBox.appendChild(div);
           });
+
+          /* (Opzionale) messaggio con corsi in coda
+          const extra = parsed.length - visible.length;
+          if (extra > 0) {
+            const info = document.createElement('div');
+            info.style.cssText = 'text-align:center;margin-top:6px;font-size:22px;color:#003366;opacity:0.8;';
+            info.textContent = `+${extra} corsi in coda`;
+            coursesBox.appendChild(info);
+          }
+          */
         }
 
         /* ---- NOTE (ticker continuo) ---- */
