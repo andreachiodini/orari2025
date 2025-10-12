@@ -8,7 +8,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <style>
-    /* ====== BASE ====== */
     body {
       font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       margin: 0;
@@ -29,6 +28,11 @@
       padding: 10px 20px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       height: 140px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
     }
     header img {
       height: 100%;
@@ -37,8 +41,8 @@
       object-fit: contain;
     }
     .datetime { text-align: right; }
-    .datetime .time { font-weight: 700; font-size: 50px; }     /* ⏰ Ora */
-    .datetime .date { font-weight: 500; font-size: 40px; color: #004080; } /* 📅 Data */
+    .datetime .time { font-weight: 700; font-size: 60px; } /* Ora aggiornata a 60px */
+    .datetime .date { font-weight: 500; font-size: 40px; color: #004080; }
 
     /* ====== CONTENUTO ====== */
     .container {
@@ -47,6 +51,8 @@
       justify-content: center;
       align-items: flex-start;
       padding: 20px;
+      padding-top: 160px;  /* spazio per header fisso */
+      padding-bottom: 100px; /* spazio per footer fisso */
     }
     #courses {
       background-color: #ffffff;
@@ -54,10 +60,10 @@
       border-radius: 12px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       width: 100%;
-      max-width: 1200px;
+      height: auto;
     }
 
-    /* ====== CORSI (3 colonne con divisori) ====== */
+    /* ====== CORSI ====== */
     .course {
       display: flex;
       border: 1px solid #ddd;
@@ -75,8 +81,8 @@
     .course .attivita {
       flex: 2;
       justify-content: flex-start;
-      font-size: 50px;             /* 🏊 Attività */
-      font-weight: 700;            /* bold */
+      font-size: 50px;
+      font-weight: 700;
       color: #003366;
     }
     .course .ingresso,
@@ -84,13 +90,13 @@
       flex: 1;
       text-align: center;
       border-left: 2px solid rgba(0,0,0,0.1);
-      font-size: 50px;             /* 🚪 Etichette */
-      font-weight: 400;            /* normale */
+      font-size: 50px;
+      font-weight: 400;
       white-space: nowrap;
     }
     .course .orario {
-      font-size: 50px;             /* ⏱ Orari */
-      font-weight: 700;            /* bold */
+      font-size: 50px;
+      font-weight: 700;
       margin-left: 6px;
     }
 
@@ -107,6 +113,11 @@
       overflow: hidden;
       display: flex;
       align-items: center;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
     }
     .ticker {
       width: 100%;
@@ -118,7 +129,7 @@
       display: inline-block;
       padding-left: 100%;
       animation: ticker 20s linear infinite;
-      font-size: 40px;             /* 📰 Note ticker */
+      font-size: 40px;
       font-weight: 500;
       color: #003366;
     }
@@ -153,7 +164,6 @@
   </footer>
 
   <script>
-    /* ====== OROLOGIO ====== */
     function updateClock() {
       const now = new Date();
       const h = now.getHours().toString().padStart(2, '0');
@@ -170,7 +180,6 @@
   </script>
 
   <script>
-    /* ====== UTILS ====== */
     function parseTime(t) {
       if (!t || typeof t !== 'string' || !t.includes(':')) return NaN;
       const [h, m] = t.split(":").map(Number);
@@ -184,14 +193,12 @@
       return "";
     }
 
-    /* ====== CARICAMENTO DATI ====== */
     async function loadAll() {
       const SHEET_BASE = 'https://docs.google.com/spreadsheets/d/1dcs1X7x84g69f14m9Sl2KmqZUbCI6lLBBfi3QCMNqWI/gviz/tq?tqx=out:json&sheet=';
       const COURSES_URL = SHEET_BASE + 'Corsi';
       const NOTES_URL   = SHEET_BASE + 'Note';
 
       try {
-        /* ---- CORSI ---- */
         const resC = await fetch(COURSES_URL);
         const txtC = await resC.text();
         const jsonC = JSON.parse(txtC.substring(47).slice(0, -2));
@@ -242,7 +249,6 @@
           });
         }
 
-        /* ---- NOTE ---- */
         const resN = await fetch(NOTES_URL);
         const txtN = await resN.text();
         const jsonN = JSON.parse(txtN.substring(47).slice(0, -2));
