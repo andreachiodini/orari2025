@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Orari Piscina Lampugnano</title>
 
-  <!-- Font Inter (simile a SF Pro Text / Compact) -->
+  <!-- Font Inter -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
@@ -69,13 +69,14 @@
     #courses { flex: 2; }
     #notes { flex: 1; }
 
+    /* --- CORSI --- */
     .course {
       display: flex;
       border: 1px solid #ddd;
       border-radius: 8px;
       overflow: hidden;
       margin-bottom: 12px;
-      font-size: 1.6em;
+      font-size: 1.8em;        /* uguale alle Attività / Note */
       font-weight: 500;
     }
 
@@ -93,15 +94,24 @@
       color: #003366;
     }
 
-    .course .ingresso, .course .inizio {
+    .course .ingresso,
+    .course .inizio {
       flex: 1;
+      text-align: center;
       border-left: 2px solid rgba(0,0,0,0.1);
+      font-weight: 700;
     }
 
     /* Colori stato */
     .green { background-color: #d4edda; }
     .yellow { background-color: #fff3cd; }
     .gray { background-color: #eeeeee; }
+
+    /* --- NOTE GENERALI --- */
+    #notes p {
+      font-size: 1.8em;        /* stesso font size dei corsi */
+      margin: 0 0 10px;
+    }
   </style>
 </head>
 <body>
@@ -205,6 +215,7 @@
       } catch (e) {
         console.error("Errore nel caricamento dei dati:", e);
         document.getElementById("courses").textContent = "⚠️ Impossibile caricare i corsi.";
+        document.getElementById("notes").textContent = "⚠️ Impossibile caricare le note.";
       }
     }
 
