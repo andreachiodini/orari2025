@@ -28,17 +28,17 @@
       background-color: #ffffff;
       padding: 10px 20px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      height: 120px;
+      height: 140px;
     }
     header img {
       height: 100%;
       width: auto;
-      max-width: 250px;
+      max-width: 280px;
       object-fit: contain;
     }
     .datetime { text-align: right; }
-    .datetime .time { font-weight: 700; font-size: 34px; }     /* ⏰ Ora 34px */
-    .datetime .date { font-weight: 500; font-size: 24px; color: #004080; } /* 📅 Data 24px */
+    .datetime .time { font-weight: 700; font-size: 50px; }     /* ⏰ Ora */
+    .datetime .date { font-weight: 500; font-size: 40px; color: #004080; } /* 📅 Data */
 
     /* ====== CONTENUTO ====== */
     .container {
@@ -63,21 +63,20 @@
       border: 1px solid #ddd;
       border-radius: 8px;
       overflow: hidden;
-      margin-bottom: 12px;
-      font-weight: 400;            /* etichette normali */
-      background-color: #eeeeee;   /* default (grigio) */
+      margin-bottom: 14px;
+      background-color: #eeeeee;
     }
     .course > div {
-      padding: 15px 20px;
+      padding: 18px 22px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
     .course .attivita {
-      flex: 2;                     /* più larga */
+      flex: 2;
       justify-content: flex-start;
-      font-size: 32px;             /* 🏊 Attività 32px */
-      font-weight: 700;            /* bold attività */
+      font-size: 50px;             /* 🏊 Attività */
+      font-weight: 700;            /* bold */
       color: #003366;
     }
     .course .ingresso,
@@ -85,14 +84,14 @@
       flex: 1;
       text-align: center;
       border-left: 2px solid rgba(0,0,0,0.1);
-      font-size: 32px;             /* 🚪 etichette 32px */
-      font-weight: 400;            /* normale per etichetta */
+      font-size: 50px;             /* 🚪 Etichette */
+      font-weight: 400;            /* normale */
       white-space: nowrap;
     }
     .course .orario {
-      font-size: 32px;             /* ⏱ orari 32px */
-      font-weight: 700;            /* bold orario */
-      margin-left: 6px;            /* spazio dopo etichetta */
+      font-size: 50px;             /* ⏱ Orari */
+      font-weight: 700;            /* bold */
+      margin-left: 6px;
     }
 
     /* Colori stato */
@@ -104,7 +103,7 @@
     footer {
       background: #ffffff;
       box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
-      height: 60px;                /* metà header */
+      height: 80px;
       overflow: hidden;
       display: flex;
       align-items: center;
@@ -119,7 +118,7 @@
       display: inline-block;
       padding-left: 100%;
       animation: ticker 20s linear infinite;
-      font-size: 24px;             /* 📰 Note ticker 24px */
+      font-size: 40px;             /* 📰 Note ticker */
       font-weight: 500;
       color: #003366;
     }
@@ -203,7 +202,7 @@
         const day = now.toLocaleDateString('it-IT', { weekday: 'long' }).toLowerCase();
 
         let parsed = rowsC
-          .filter(r => (r[0] || '').toLowerCase() === day)  // Giorno corrispondente
+          .filter(r => (r[0] || '').toLowerCase() === day)
           .map(r => {
             const ingressoMin = parseTime(r[2]);
             const inizioMin   = parseTime(r[3]);
@@ -217,7 +216,6 @@
               inizioMin
             };
           })
-          // Rimuove i corsi già finiti: fine = ingresso + durata
           .filter(c => Number.isFinite(c.ingressoMin) && currentTime <= (c.ingressoMin + c.durata))
           .sort((a, b) => a.ingressoMin - b.ingressoMin);
 
@@ -230,8 +228,8 @@
           parsed.forEach(corso => {
             const timeToStart = corso.ingressoMin - currentTime;
             let style = 'gray';
-            if (timeToStart <= 0 && timeToStart > -corso.durata) style = 'green';   // in corso
-            else if (timeToStart <= 5 && timeToStart > 0)        style = 'yellow';  // in partenza
+            if (timeToStart <= 0 && timeToStart > -corso.durata) style = 'green';
+            else if (timeToStart <= 5 && timeToStart > 0)        style = 'yellow';
 
             const div = document.createElement('div');
             div.className = `course ${style}`;
@@ -244,7 +242,7 @@
           });
         }
 
-        /* ---- NOTE (ticker) ---- */
+        /* ---- NOTE ---- */
         const resN = await fetch(NOTES_URL);
         const txtN = await resN.text();
         const jsonN = JSON.parse(txtN.substring(47).slice(0, -2));
@@ -265,7 +263,7 @@
     }
 
     loadAll();
-    setInterval(loadAll, 60000); // aggiorna ogni minuto
+    setInterval(loadAll, 60000);
   </script>
 </body>
 </html>
