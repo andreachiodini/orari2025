@@ -11,7 +11,7 @@
     body {
       font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       margin: 0;
-      background-color: #f0f8ff;
+      background-color: #f0f8ff; /* azzurro */
       color: #003366;
       letter-spacing: -0.3px;
       display: flex;
@@ -41,7 +41,7 @@
       object-fit: contain;
     }
     .datetime { text-align: right; }
-    .datetime .time { font-weight: 700; font-size: 70px; } /* Ora a 70px */
+    .datetime .time { font-weight: 700; font-size: 70px; } /* Ora */
     .datetime .date { font-weight: 500; font-size: 40px; color: #004080; }
 
     /* ====== CONTENUTO ====== */
@@ -51,16 +51,13 @@
       justify-content: center;
       align-items: flex-start;
       padding: 20px;
-      padding-top: 160px;  /* spazio per header fisso */
-      padding-bottom: 100px; /* spazio per footer fisso */
+      padding-top: 160px;   /* spazio per header */
+      padding-bottom: 100px; /* spazio per footer */
     }
     #courses {
-      background-color: #ffffff;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      background-color: transparent; /* trasparente = azzurro dietro */
+      padding: 0;
       width: 100%;
-      height: auto;
     }
 
     /* ====== CORSI ====== */
@@ -128,7 +125,7 @@
     .ticker__content {
       display: inline-block;
       padding-left: 100%;
-      animation: ticker 40s linear infinite; /* rallentato */
+      animation: ticker 40s linear infinite;
       font-size: 40px;
       font-weight: 500;
       color: #003366;
