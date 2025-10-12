@@ -36,9 +36,9 @@
       object-fit: contain;
     }
 
-    .datetime { text-align: right; font-size: 2em; }
-    .datetime .time { font-weight: 700; font-size: 2.0em; }
-    .datetime .date { font-weight: 500; font-size: 1.4em; color: #004080; }
+    .datetime { text-align: right; }
+    .datetime .time { font-weight: 700; font-size: 2.125em; } /* 34px */
+    .datetime .date { font-weight: 500; font-size: 1.5em; color: #004080; } /* 24px */
 
     .container {
       flex: 1;
@@ -64,7 +64,7 @@
       border-radius: 8px;
       overflow: hidden;
       margin-bottom: 12px;
-      font-size: 1.8em;
+      font-size: 2em; /* 32px base */
       font-weight: 500;
     }
     .course div {
@@ -76,7 +76,7 @@
     .course .attivita {
       flex: 2;
       justify-content: flex-start;
-      font-weight: 700;
+      font-weight: 700; /* bold attività */
       color: #003366;
     }
     .course .ingresso,
@@ -84,10 +84,10 @@
       flex: 1;
       text-align: center;
       border-left: 2px solid rgba(0,0,0,0.1);
-      font-weight: 400;
+      font-weight: 400; /* normale etichette */
     }
     .course .orario {
-      font-weight: 700;
+      font-weight: 700; /* bold orari */
       margin-left: 6px;
     }
 
@@ -100,7 +100,7 @@
     footer {
       background: #ffffff;
       box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
-      height: 60px;  /* metà header */
+      height: 60px;
       overflow: hidden;
       display: flex;
       align-items: center;
@@ -115,7 +115,7 @@
       display: inline-block;
       padding-left: 100%;
       animation: ticker 20s linear infinite;
-      font-size: 1.6em;
+      font-size: 1.5em; /* 24px */
       font-weight: 500;
       color: #003366;
     }
@@ -247,7 +247,7 @@
         const notesText = rowsN
           .filter(r => r[0] && r[0].trim() !== '')
           .map(r => r[0])
-          .join("  •  ") || '—';
+          .join("   •   ") || '—';
 
         document.getElementById('ticker-text').textContent = notesText;
 
