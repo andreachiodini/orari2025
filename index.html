@@ -11,7 +11,7 @@
     body {
       font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       margin: 0;
-      background-color: #f0f8ff;
+      background-color: #f0f8ff; /* azzurro */
       color: #003366;
       letter-spacing: -0.3px;
       display: flex;
@@ -29,7 +29,9 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       height: 140px;
       position: fixed;
-      top: 0; left: 0; right: 0;
+      top: 0;
+      left: 0;
+      right: 0;
       z-index: 1000;
     }
     header img {
@@ -46,30 +48,31 @@
     .container {
       flex: 1;
       display: flex;
-      flex-direction: column;
-      justify-content: center;          /* centro verticale */
+      justify-content: center;   /* centra orizzontalmente */
+      align-items: center;       /* centra verticalmente */
       padding: 20px;
-      padding-top: 180px;               /* spazio per header fisso */
-      padding-bottom: 100px;            /* spazio per footer fisso */
-      min-height: calc(100vh - 180px - 100px);
-      box-sizing: border-box;
+      padding-top: 180px;        /* spazio per header */
+      padding-bottom: 100px;     /* spazio per footer */
     }
     #courses {
       background-color: transparent;
       padding: 0;
       width: 100%;
-      margin: 0;
+      max-width: 1600px;         /* limite massimo larghezza */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     /* ====== CORSI ====== */
     .course {
       display: flex;
-      width: 100%;                      /* prende tutta la larghezza */
       border: 1px solid #ddd;
       border-radius: 8px;
       overflow: hidden;
       margin-bottom: 14px;
       background-color: #eeeeee;
+      width: 100%;
     }
     .course > div {
       padding: 18px 22px;
@@ -113,7 +116,9 @@
       display: flex;
       align-items: center;
       position: fixed;
-      bottom: 0; left: 0; right: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
       z-index: 1000;
     }
     .ticker {
@@ -240,9 +245,18 @@
         coursesBox.innerHTML = '';
 
         if (parsed.length === 0) {
-          coursesBox.textContent = 'Nessun corso previsto (o corsi di oggi già conclusi).';
+          coursesBox.innerHTML = `
+            <div style="
+              width:100%;
+              text-align:center;
+              font-size:50px;
+              font-weight:500;
+              color:#003366;
+              padding:40px 0;">
+              🏊‍♂️ Le attività di oggi sono terminate.<br>Ti aspettiamo domani!
+            </div>`;
         } else {
-          const visible = parsed.slice(0, 5);
+          const visible = parsed.slice(0, 5); // Mostra max 5 corsi
           visible.forEach(corso => {
             const timeToStart = corso.ingressoMin - currentTime;
             let style = 'gray';
@@ -260,7 +274,7 @@
           });
         }
 
-        /* ---- NOTE (ticker continuo) ---- */
+        /* ---- NOTE (ticker) ---- */
         const resN = await fetch(NOTES_URL);
         const txtN = await resN.text();
         const jsonN = JSON.parse(txtN.substring(47).slice(0, -2));
@@ -282,7 +296,7 @@
         requestAnimationFrame(() => {
           const contentWidth = copy1.offsetWidth;
           const containerWidth = ticker.offsetWidth;
-          const PIXELS_PER_SECOND = 130;
+          const PIXELS_PER_SECOND = 120;
 
           const distance = Math.max(contentWidth, containerWidth);
           const durationSec = Math.max(15, distance / PIXELS_PER_SECOND);
