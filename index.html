@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
   <title>Orari Piscina Lampugnano</title>
 
-  <!-- Font stile Apple -->
-  <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+  <!-- Font Inter (simile a SF Pro Text / Compact) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     body {
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       margin: 0;
-      font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
-      background-color: #f6f8fa;
-      color: #1c1c1e;
+      background-color: #f0f8ff;
+      color: #003366;
+      letter-spacing: -0.3px;
     }
 
     header {
@@ -21,133 +21,174 @@
       justify-content: space-between;
       align-items: center;
       background-color: #ffffff;
-      padding: 0.8em 1.5em;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      height: 80px;
+      padding: 10px 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      height: 120px; /* blocco header fisso */
     }
 
-    #logo {
-      height: 55px; /* leggermente più grande del precedente */
+    header img {
+      height: 100%;       /* mantiene altezza header */
+      width: auto;        /* ingrandisce proporzionalmente il logo */
+      max-width: 250px;   /* limite larghezza */
+      object-fit: contain;
     }
 
-    #datetime {
+    .datetime {
       text-align: right;
-      font-size: 1.4em;
+      font-size: 2em;
+    }
+
+    .datetime .time {
+      font-weight: 700;
+      font-size: 2.5em;
+    }
+
+    .datetime .date {
       font-weight: 500;
-      color: #333;
-      line-height: 1.2;
+      font-size: 1.8em;
+      color: #004080;
     }
 
-    main {
-      padding: 2em;
-      max-width: 1100px;
-      margin: auto;
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 40px;
+      padding: 20px;
+      flex-wrap: wrap;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: white;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    #courses, #notes {
+      background-color: #ffffff;
+      padding: 20px;
       border-radius: 12px;
-      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      min-width: 300px;
     }
 
-    th, td {
-      text-align: left;
-      padding: 12px 16px;
+    #courses {
+      flex: 2;
     }
 
-    th {
-      background-color: #007aff;
-      color: white;
-      text-transform: uppercase;
-      font-size: 0.9em;
-      letter-spacing: 0.5px;
+    #notes {
+      flex: 1;
     }
 
-    tr:nth-child(even) {
-      background-color: #f8f9fb;
-    }
-
-    tr:hover {
-      background-color: #eaf3ff;
-      transition: 0.2s;
+    .course {
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      font-size: 1.6em;
+      font-weight: 500;
     }
   </style>
 </head>
 <body>
   <header>
-    <img id="logo" src="logo.png" alt="Logo Piscina Lampugnano" />
-    <div id="datetime">
-      <div id="time"></div>
-      <div id="date"></div>
+    <img src="CF Lampugnano blu xl.png" alt="Logo Piscina">
+    <div class="datetime">
+      <div class="time" id="clock">--:--</div>
+      <div class="date" id="date">--, --/--/----</div>
     </div>
   </header>
 
-  <main>
-    <h1 style="text-align:center; color:#007aff;">Orari Corsi Piscina Lampugnano</h1>
-    <table id="coursesTable">
-      <thead>
-        <tr id="tableHeader"></tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
-  </main>
+  <div class="container">
+    <div id="courses">Caricamento corsi...</div>
+    <div id="notes">Caricamento note...</div>
+  </div>
 
   <script>
-    // Mostra orario e data con giorno della settimana
-    function updateDateTime() {
+    // Orologio e data con giorno della settimana
+    function updateClock() {
       const now = new Date();
-      const time = now.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
-      const date = now.toLocaleDateString('it-IT', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
-      document.getElementById('time').textContent = time;
-      document.getElementById('date').textContent = date.charAt(0).toUpperCase() + date.slice(1);
+      const h = now.getHours().toString().padStart(2, '0');
+      const m = now.getMinutes().toString().padStart(2, '0');
+      const d = now.getDate().toString().padStart(2, '0');
+      const month = (now.getMonth() + 1).toString().padStart(2, '0');
+      const year = now.getFullYear();
+      const weekday = now.toLocaleDateString('it-IT', { weekday: 'long' });
+      document.getElementById("clock").textContent = `${h}:${m}`;
+      document.getElementById("date").textContent = `${weekday}, ${d}/${month}/${year}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+
+  <script>
+    function parseTime(t) {
+      const [h, m] = t.split(":").map(Number);
+      return h * 60 + m;
     }
 
-    setInterval(updateDateTime, 1000);
-    updateDateTime();
+    function formatCell(cell) {
+      if (!cell) return "";
+      if (cell.f) return cell.f;
+      if (typeof cell.v === 'string') return cell.v;
+      if (typeof cell.v === 'number') return cell.v.toString();
+      return "";
+    }
 
-    // Carica i corsi da Google Sheets
     async function loadCourses() {
+      const sheetUrl = 'https://docs.google.com/spreadsheets/d/1dcs1X7x84g69f14m9Sl2KmqZUbCI6lLBBfi3QCMNqWI/gviz/tq?tqx=out:json&sheet=Corsi';
+
       try {
-        const sheetId = "1dcs1X7x84g69f14m9Sl2KmqZUbCI6lLBBfi3QCMNqWI";
-        const sheetName = "Corsi";
-        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
-        const response = await fetch(url);
-        const text = await response.text();
+        const res = await fetch(sheetUrl);
+        const text = await res.text();
+        const json = JSON.parse(text.substring(47).slice(0, -2));
+        const rows = json.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ""));
+        console.log("Dati caricati dal foglio:", rows);
 
-        const json = JSON.parse(text.substring(47, text.length - 2));
-        const table = json.table;
-        const headers = table.cols.map(col => col.label);
-        const rows = table.rows.map(row => row.c.map(cell => (cell ? cell.v : "")));
+        const now = new Date();
+        const day = now.toLocaleDateString('it-IT', { weekday: 'long' });
+        const currentTime = now.getHours() * 60 + now.getMinutes();
 
-        const headerRow = document.getElementById("tableHeader");
-        headers.forEach(h => {
-          const th = document.createElement("th");
-          th.textContent = h;
-          headerRow.appendChild(th);
+        const todayCourses = rows.filter(r => r[0].toLowerCase() === day.toLowerCase());
+        const parsedCourses = todayCourses
+          .filter(r => r[0].toLowerCase() !== 'giorno')
+          .map(r => {
+            const ingresso = parseTime(r[2]);
+            const inizio = parseTime(r[3]);
+            return {
+              attivita: r[1],
+              oraIngresso: r[2],
+              oraInizio: r[3],
+              durata: parseInt(r[4] || 60),
+              note: r[5],
+              ingressoMin: ingresso,
+              inizioMin: inizio
+            };
+          }).sort((a, b) => a.ingressoMin - b.ingressoMin);
+
+        const container = document.getElementById("courses");
+        container.innerHTML = "";
+
+        if (parsedCourses.length === 0) {
+          container.textContent = "Nessun corso previsto per oggi.";
+          return;
+        }
+
+        parsedCourses.forEach(corso => {
+          const timeToStart = corso.ingressoMin - currentTime;
+          let style = "gray";
+          if (timeToStart <= 0 && timeToStart > -corso.durata) style = "green";
+          else if (timeToStart <= 5 && timeToStart > 0) style = "yellow";
+
+          const div = document.createElement("div");
+          div.className = "course";
+          div.style.backgroundColor = style === "green" ? "#d4edda" : style === "yellow" ? "#fff3cd" : "#eeeeee";
+          div.innerHTML = `<strong>${corso.attivita}</strong> | Ingresso: ${corso.oraIngresso} | Inizio: ${corso.oraInizio} <br>${corso.note || ""}`;
+          container.appendChild(div);
         });
 
-        const body = document.getElementById("tableBody");
-        rows.forEach(row => {
-          const tr = document.createElement("tr");
-          row.forEach(cell => {
-            const td = document.createElement("td");
-            td.textContent = cell;
-            tr.appendChild(td);
-          });
-          body.appendChild(tr);
-        });
-      } catch (error) {
-        console.error("Errore nel caricamento dei corsi:", error);
+      } catch (e) {
+        console.error("Errore nel caricamento dei corsi:", e);
+        document.getElementById("courses").textContent = "⚠️ Impossibile caricare i corsi.";
       }
     }
 
     loadCourses();
+    setInterval(loadCourses, 60000);
   </script>
 </body>
 </html>
