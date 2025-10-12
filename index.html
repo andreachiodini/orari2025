@@ -132,12 +132,14 @@
       animation: ticker var(--ticker-duration, 30s) linear infinite;
     }
     .ticker__content {
-      display: inline-block;
-      padding-right: 60px; /* spazio tra le copie */
-      font-size: 40px;
-      font-weight: 500;
-      color: #003366;
-    }
+  display: inline-block;
+  padding-right: 60px; /* spazio tra le copie */
+  font-size: 40px;
+  font-weight: 500;
+  color: #003366;
+  line-height: 1.4;      /* alza leggermente la riga */
+  transform: translateY(3px); /* spostamento fine verso il basso */
+}
     @keyframes ticker {
       0%   { transform: translateX(0); }
       100% { transform: translateX(-50%); } /* scorre di una “copia” */
