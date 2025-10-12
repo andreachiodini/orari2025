@@ -27,7 +27,7 @@
       background-color: #ffffff;
       padding: 10px 20px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      height: 140px;           /* altezza fissa */
+      height: 140px;
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 1000;
@@ -46,28 +46,25 @@
     .container {
       flex: 1;
       display: flex;
-      justify-content: center;        /* centro orizzontale del contenitore #courses */
-      align-items: center;            /* centro verticale dell'area utile */
+      flex-direction: column;
+      justify-content: center;          /* centro verticale */
       padding: 20px;
-      padding-top: 180px;             /* spazio per header fisso */
-      padding-bottom: 100px;          /* spazio per footer fisso */
-      min-height: calc(100vh - 180px - 100px); /* area visibile tra header e footer */
+      padding-top: 180px;               /* spazio per header fisso */
+      padding-bottom: 100px;            /* spazio per footer fisso */
+      min-height: calc(100vh - 180px - 100px);
       box-sizing: border-box;
     }
     #courses {
       background-color: transparent;
       padding: 0;
       width: 100%;
-      max-width: 1400px;              /* larghezza massima elegante */
-      margin: 0 auto;                 /* centro orizzontale */
-      display: flex;
-      flex-direction: column;
-      justify-content: center;        /* centra i box verticalmente dentro #courses */
+      margin: 0;
     }
 
     /* ====== CORSI ====== */
     .course {
       display: flex;
+      width: 100%;                      /* prende tutta la larghezza */
       border: 1px solid #ddd;
       border-radius: 8px;
       overflow: hidden;
@@ -92,12 +89,12 @@
       flex: 1;
       text-align: center;
       border-left: 2px solid rgba(0,0,0,0.1);
-      font-size: 60px;        /* etichette normali */
+      font-size: 60px;
       font-weight: 400;
       white-space: nowrap;
     }
     .course .orario {
-      font-size: 60px;        /* orari in bold */
+      font-size: 60px;
       font-weight: 700;
       margin-left: 6px;
     }
@@ -111,7 +108,7 @@
     footer {
       background: #ffffff;
       box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
-      height: 80px; /* altezza invariata */
+      height: 80px;
       overflow: hidden;
       display: flex;
       align-items: center;
@@ -134,16 +131,16 @@
     }
     .ticker__content {
       display: inline-block;
-      padding-right: 60px; /* spazio tra le copie */
-      font-size: 50px;     /* Note */
+      padding-right: 60px;
+      font-size: 50px;
       font-weight: 500;
       color: #003366;
       line-height: 1.3;
-      transform: translateY(8px); /* leggermente più basso nel box */
+      transform: translateY(8px);
     }
     @keyframes ticker {
       0%   { transform: translateX(0); }
-      100% { transform: translateX(-50%); } /* scorre di una “copia” */
+      100% { transform: translateX(-50%); }
     }
   </style>
 </head>
@@ -204,7 +201,7 @@
       return "";
     }
 
-    /* ====== CARICAMENTO DATI (Corsi + Note) ====== */
+    /* ====== CARICAMENTO DATI ====== */
     async function loadAll() {
       const SHEET_BASE = 'https://docs.google.com/spreadsheets/d/1dcs1X7x84g69f14m9Sl2KmqZUbCI6lLBBfi3QCMNqWI/gviz/tq?tqx=out:json&sheet=';
       const COURSES_URL = SHEET_BASE + 'Corsi';
@@ -214,21 +211,21 @@
         /* ---- CORSI ---- */
         const resC = await fetch(COURSES_URL);
         const txtC = await resC.text();
-        theJSON = JSON.parse(txtC.substring(47).slice(0, -2));
-        const rowsC = theJSON.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ""));
+        const jsonC = JSON.parse(txtC.substring(47).slice(0, -2));
+        const rowsC = jsonC.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ""));
 
         const now = new Date();
         const currentTime = now.getHours() * 60 + now.getMinutes();
         const day = now.toLocaleDateString('it-IT', { weekday: 'long' }).toLowerCase();
 
         let parsed = rowsC
-          .filter(r => (r[0] || '').toLowerCase() === day)  // prima colonna: giorno
+          .filter(r => (r[0] || '').toLowerCase() === day)
           .map(r => {
-            const ingressoMin = parseTime(r[2]);            // colonna 3: Ingresso
-            const inizioMin   = parseTime(r[3]);            // colonna 4: Inizio
-            const durata      = Number.parseInt(r[4]) || 60; // colonna 5: Durata (min)
+            const ingressoMin = parseTime(r[2]);
+            const inizioMin   = parseTime(r[3]);
+            const durata      = Number.parseInt(r[4]) || 60;
             return {
-              attivita: r[1] || '',                         // colonna 2: Attività
+              attivita: r[1] || '',
               oraIngresso: r[2] || '',
               oraInizio: r[3] || '',
               durata,
@@ -236,7 +233,6 @@
               inizioMin
             };
           })
-          // rimuove i corsi finiti (fine = ingresso + durata)
           .filter(c => Number.isFinite(c.ingressoMin) && currentTime <= (c.ingressoMin + c.durata))
           .sort((a, b) => a.ingressoMin - b.ingressoMin);
 
@@ -246,14 +242,12 @@
         if (parsed.length === 0) {
           coursesBox.textContent = 'Nessun corso previsto (o corsi di oggi già conclusi).';
         } else {
-          /* ====== MOSTRA SOLO I PRIMI 5 CORSI ====== */
           const visible = parsed.slice(0, 5);
-
           visible.forEach(corso => {
             const timeToStart = corso.ingressoMin - currentTime;
             let style = 'gray';
-            if (timeToStart <= 0 && timeToStart > -corso.durata) style = 'green';   // in corso
-            else if (timeToStart <= 5 && timeToStart > 0)        style = 'yellow';  // sta per iniziare (5')
+            if (timeToStart <= 0 && timeToStart > -corso.durata) style = 'green';
+            else if (timeToStart <= 5 && timeToStart > 0)        style = 'yellow';
 
             const div = document.createElement('div');
             div.className = `course ${style}`;
@@ -277,20 +271,18 @@
           .map(r => r[0])
           .join("  •  ") || '—';
 
-        // Inserisco due copie identiche del testo (scorrimento infinito)
         const copy1 = document.getElementById('ticker-copy-1');
         const copy2 = document.getElementById('ticker-copy-2');
         copy1.textContent = notesText;
         copy2.textContent = notesText;
 
-        // Calcolo durata in base alla larghezza del testo per avere velocità costante
         const track = document.getElementById('ticker-track');
         const ticker = document.getElementById('ticker');
 
         requestAnimationFrame(() => {
-          const contentWidth = copy1.offsetWidth;  // larghezza di UNA copia
+          const contentWidth = copy1.offsetWidth;
           const containerWidth = ticker.offsetWidth;
-          const PIXELS_PER_SECOND = 120;           // aumenta/diminuisci per regolare la velocità
+          const PIXELS_PER_SECOND = 120;
 
           const distance = Math.max(contentWidth, containerWidth);
           const durationSec = Math.max(15, distance / PIXELS_PER_SECOND);
@@ -307,7 +299,7 @@
     }
 
     loadAll();
-    setInterval(loadAll, 60000); // refresh ogni minuto
+    setInterval(loadAll, 60000);
   </script>
 </body>
 </html>
