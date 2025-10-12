@@ -33,21 +33,9 @@
       object-fit: contain;
     }
 
-    .datetime {
-      text-align: right;
-      font-size: 2em;
-    }
-
-    .datetime .time {
-      font-weight: 700;
-      font-size: 2.0em;
-    }
-
-    .datetime .date {
-      font-weight: 500;
-      font-size: 1.4em;
-      color: #004080;
-    }
+    .datetime { text-align: right; font-size: 2em; }
+    .datetime .time { font-weight: 700; font-size: 2.0em; }
+    .datetime .date { font-weight: 500; font-size: 1.4em; color: #004080; }
 
     .container {
       display: flex;
@@ -65,51 +53,46 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       min-width: 300px;
     }
-
     #courses { flex: 2; }
-    #notes { flex: 1; }
+    #notes  { flex: 1; }
 
-    /* --- CORSI --- */
+    /* --- CORSI (3 colonne con divisori) --- */
     .course {
       display: flex;
       border: 1px solid #ddd;
       border-radius: 8px;
       overflow: hidden;
       margin-bottom: 12px;
-      font-size: 1.8em;        /* uguale alle Attività / Note */
+      font-size: 1.8em;   /* stessa dimensione di Attività e Note */
       font-weight: 500;
     }
-
     .course div {
       padding: 15px 20px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-
     .course .attivita {
-      flex: 2;
+      flex: 2;                     /* più larga */
       justify-content: flex-start;
       font-weight: 700;
       color: #003366;
     }
-
-    .course .ingresso,
-    .course .inizio {
+    .course .ingresso, .course .inizio {
       flex: 1;
       text-align: center;
-      border-left: 2px solid rgba(0,0,0,0.1);
+      border-left: 2px solid rgba(0,0,0,0.1); /* linee verticali divisorie */
       font-weight: 700;
     }
 
     /* Colori stato */
-    .green { background-color: #d4edda; }
+    .green  { background-color: #d4edda; }
     .yellow { background-color: #fff3cd; }
-    .gray { background-color: #eeeeee; }
+    .gray   { background-color: #eeeeee; }
 
     /* --- NOTE GENERALI --- */
     #notes p {
-      font-size: 1.8em;        /* stesso font size dei corsi */
+      font-size: 1.8em;  /* uguale ai corsi */
       margin: 0 0 10px;
     }
   </style>
@@ -129,6 +112,7 @@
   </div>
 
   <script>
+    // Orologio + giorno settimana
     function updateClock() {
       const now = new Date();
       const h = now.getHours().toString().padStart(2, '0');
@@ -138,18 +122,19 @@
       const year = now.getFullYear();
       const weekday = now.toLocaleDateString('it-IT', { weekday: 'long' });
       document.getElementById("clock").textContent = `${h}:${m}`;
-      document.getElementById("date").textContent = `${weekday}, ${d}/${month}/${year}`;
+      document.getElementById("date").textContent  = `${weekday}, ${d}/${month}/${year}`;
     }
     setInterval(updateClock, 1000);
     updateClock();
   </script>
 
   <script>
+    // Utils
     function parseTime(t) {
+      if (!t || typeof t !== 'string' || !t.includes(':')) return NaN;
       const [h, m] = t.split(":").map(Number);
-      return h * 60 + m;
+      return (h * 60) + m;
     }
-
     function formatCell(cell) {
       if (!cell) return "";
       if (cell.f) return cell.f;
@@ -158,69 +143,87 @@
       return "";
     }
 
-    async function loadCourses() {
-      const sheetUrl = 'https://docs.google.com/spreadsheets/d/1dcs1X7x84g69f14m9Sl2KmqZUbCI6lLBBfi3QCMNqWI/gviz/tq?tqx=out:json&sheet=Corsi';
-      const notesUrl = 'https://docs.google.com/spreadsheets/d/1dcs1X7x84g69f14m9Sl2KmqZUbCI6lLBBfi3QCMNqWI/gviz/tq?tqx=out:json&sheet=Note';
+    async function loadAll() {
+      const SHEET_BASE = 'https://docs.google.com/spreadsheets/d/1dcs1X7x84g69f14m9Sl2KmqZUbCI6lLBBfi3QCMNqWI/gviz/tq?tqx=out:json&sheet=';
+      const COURSES_URL = SHEET_BASE + 'Corsi';
+      const NOTES_URL   = SHEET_BASE + 'Note';
 
       try {
-        // CORSI
-        const res = await fetch(sheetUrl);
-        const text = await res.text();
-        const json = JSON.parse(text.substring(47).slice(0, -2));
-        const rows = json.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ""));
+        // ===== CORSI =====
+        const resC = await fetch(COURSES_URL);
+        const txtC = await resC.text();
+        const jsonC = JSON.parse(txtC.substring(47).slice(0, -2));
+        const rowsC = jsonC.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ""));
 
         const now = new Date();
-        const day = now.toLocaleDateString('it-IT', { weekday: 'long' });
         const currentTime = now.getHours() * 60 + now.getMinutes();
+        const day = now.toLocaleDateString('it-IT', { weekday: 'long' }).toLowerCase();
 
-        const todayCourses = rows.filter(r => r[0].toLowerCase() === day.toLowerCase());
-        const parsedCourses = todayCourses.map(r => ({
-          attivita: r[1],
-          oraIngresso: r[2],
-          oraInizio: r[3],
-          durata: parseInt(r[4] || 60),
-          ingressoMin: parseTime(r[2]),
-        })).sort((a, b) => a.ingressoMin - b.ingressoMin);
+        // Mappa righe -> oggetti + filtra per oggi
+        let parsed = rowsC
+          .filter(r => (r[0] || '').toLowerCase() === day)   // Giorno
+          .map(r => {
+            const ingressoMin = parseTime(r[2]);            // Ingresso HH:MM
+            const inizioMin   = parseTime(r[3]);            // Inizio HH:MM (se serve in futuro)
+            const durata      = Number.parseInt(r[4]) || 60; // default 60'
+            return {
+              attivita: r[1] || '',
+              oraIngresso: r[2] || '',
+              oraInizio: r[3] || '',
+              durata,
+              ingressoMin,
+              inizioMin
+            };
+          })
+          // Rimuovi corsi già finiti: se l'orario attuale è > ingresso + durata
+          .filter(c => Number.isFinite(c.ingressoMin) && currentTime <= (c.ingressoMin + c.durata))
+          // Ordina per orario di ingresso
+          .sort((a, b) => a.ingressoMin - b.ingressoMin);
 
-        const container = document.getElementById("courses");
-        container.innerHTML = "";
+        const coursesBox = document.getElementById('courses');
+        coursesBox.innerHTML = '';
 
-        if (parsedCourses.length === 0) {
-          container.textContent = "Nessun corso previsto per oggi.";
+        if (parsed.length === 0) {
+          coursesBox.textContent = 'Nessun corso previsto (o corsi di oggi già conclusi).';
         } else {
-          parsedCourses.forEach(corso => {
+          parsed.forEach(corso => {
             const timeToStart = corso.ingressoMin - currentTime;
-            let style = "gray";
-            if (timeToStart <= 0 && timeToStart > -corso.durata) style = "green";
-            else if (timeToStart <= 5 && timeToStart > 0) style = "yellow";
+            let style = 'gray';
+            if (timeToStart <= 0 && timeToStart > -corso.durata) style = 'green';       // in corso
+            else if (timeToStart <= 5 && timeToStart > 0)        style = 'yellow';      // in arrivo
 
-            const div = document.createElement("div");
+            const div = document.createElement('div');
             div.className = `course ${style}`;
             div.innerHTML = `
               <div class="attivita">${corso.attivita}</div>
               <div class="ingresso">Ingresso: ${corso.oraIngresso}</div>
               <div class="inizio">Inizio: ${corso.oraInizio}</div>
             `;
-            container.appendChild(div);
+            coursesBox.appendChild(div);
           });
         }
 
-        // NOTE
-        const resNotes = await fetch(notesUrl);
-        const textNotes = await resNotes.text();
-        const jsonNotes = JSON.parse(textNotes.substring(47).slice(0, -2));
-        const rowsNotes = jsonNotes.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ""));
-        document.getElementById("notes").innerHTML = rowsNotes.map(r => `<p>${r[0]}</p>`).join("");
+        // ===== NOTE =====
+        const resN = await fetch(NOTES_URL);
+        const txtN = await resN.text();
+        const jsonN = JSON.parse(txtN.substring(47).slice(0, -2));
+        const rowsN = jsonN.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ""));
 
-      } catch (e) {
-        console.error("Errore nel caricamento dei dati:", e);
-        document.getElementById("courses").textContent = "⚠️ Impossibile caricare i corsi.";
-        document.getElementById("notes").textContent = "⚠️ Impossibile caricare le note.";
+        const notesBox = document.getElementById('notes');
+        notesBox.innerHTML = rowsN
+          .filter(r => r[0] && r[0].trim() !== '')
+          .map(r => `<p>${r[0]}</p>`)
+          .join('') || '—';
+
+      } catch (err) {
+        console.error('Errore nel caricamento:', err);
+        document.getElementById('courses').textContent = '⚠️ Impossibile caricare i corsi.';
+        document.getElementById('notes').textContent   = '⚠️ Impossibile caricare le note.';
       }
     }
 
-    loadCourses();
-    setInterval(loadCourses, 60000);
+    loadAll();
+    setInterval(loadAll, 60000); // aggiorna ogni minuto
   </script>
 </body>
 </html>
