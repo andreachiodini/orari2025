@@ -80,10 +80,10 @@
     // Orologio e data
     function updateClock() {
       const now = new Date();
-      const h = now.getHours().toString().padStart(2,'0');
-      const m = now.getMinutes().toString().padStart(2,'0');
-      const d = now.getDate().toString().padStart(2,'0');
-      const month = (now.getMonth()+1).toString().padStart(2,'0');
+      const h = now.getHours().toString().padStart(2, '0');
+      const m = now.getMinutes().toString().padStart(2, '0');
+      const d = now.getDate().toString().padStart(2, '0');
+      const month = (now.getMonth() + 1).toString().padStart(2, '0');
       const year = now.getFullYear();
       document.getElementById("clock").textContent = `${h}:${m}`;
       document.getElementById("date").textContent = `${d}/${month}/${year}`;
@@ -93,10 +93,9 @@
   </script>
 
   <script>
-    // --- CARICAMENTO CORSI DAL GOOGLE SHEET ---
     function parseTime(t) {
-      const [h,m] = t.split(":").map(Number);
-      return h*60 + m;
+      const [h, m] = t.split(":").map(Number);
+      return h * 60 + m;
     }
 
     function formatCell(cell) {
@@ -108,18 +107,18 @@
     }
 
     async function loadCourses() {
-      const sheetUrl = 'https://docs.google.com/spreadsheets/d/2PACX-1vR_ppEu9INE0kuR0Hl9Il-Cqym40HrNOOuBKNWY9PK1fY4oGipwh0ZPS-qDvLElGxXi7pZrYUT_6JyG/gviz/tq?tqx=out:json&sheet=Corsi';
+      const sheetUrl = 'https://docs.google.com/spreadsheets/d/1dcs1X7x84g69f14m9Sl2KmqZUbCI6lLBBfi3QCMNqWI/gviz/tq?tqx=out:json&sheet=Corsi';
 
       try {
         const res = await fetch(sheetUrl);
         const text = await res.text();
-        const json = JSON.parse(text.substring(47).slice(0,-2));
+        const json = JSON.parse(text.substring(47).slice(0, -2));
         const rows = json.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ""));
         console.log("Dati caricati dal foglio:", rows);
 
         const now = new Date();
-        const day = now.toLocaleDateString('it-IT',{weekday:'long'});
-        const currentTime = now.getHours()*60 + now.getMinutes();
+        const day = now.toLocaleDateString('it-IT', { weekday: 'long' });
+        const currentTime = now.getHours() * 60 + now.getMinutes();
 
         const todayCourses = rows.filter(r => r[0].toLowerCase() === day.toLowerCase());
         const parsedCourses = todayCourses
@@ -136,7 +135,7 @@
               ingressoMin: ingresso,
               inizioMin: inizio
             };
-          }).sort((a,b)=>a.ingressoMin-b.ingressoMin);
+          }).sort((a, b) => a.ingressoMin - b.ingressoMin);
 
         const container = document.getElementById("courses");
         container.innerHTML = "";
@@ -146,15 +145,15 @@
           return;
         }
 
-        parsedCourses.forEach(corso=>{
+        parsedCourses.forEach(corso => {
           const timeToStart = corso.ingressoMin - currentTime;
           let style = "gray";
-          if(timeToStart <=0 && timeToStart > -corso.durata) style="green";
-          else if(timeToStart<=5 && timeToStart>0) style="yellow";
+          if (timeToStart <= 0 && timeToStart > -corso.durata) style = "green";
+          else if (timeToStart <= 5 && timeToStart > 0) style = "yellow";
 
           const div = document.createElement("div");
           div.className = "course";
-          div.style.backgroundColor = style==="green"? "#d4edda" : style==="yellow"? "#fff3cd" : "#eeeeee";
+          div.style.backgroundColor = style === "green" ? "#d4edda" : style === "yellow" ? "#fff3cd" : "#eeeeee";
           div.innerHTML = `<strong>${corso.attivita}</strong> | Ingresso: ${corso.oraIngresso} | Inizio: ${corso.oraInizio} <br>${corso.note || ""}`;
           container.appendChild(div);
         });
