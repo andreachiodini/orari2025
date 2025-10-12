@@ -1,17 +1,19 @@
+<!DOCTYPE html>
+<html lang="it">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Orari Piscina Lampugnano</title>
 
-  <!-- Font Inter (simile a SF Pro) -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font stile Apple -->
+  <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
 
   <style>
     body {
-      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       margin: 0;
-      background-color: #f0f8ff;
-      color: #003366;
-      letter-spacing: -0.3px;
+      font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background-color: #f6f8fa;
+      color: #1c1c1e;
     }
 
     header {
@@ -19,101 +21,133 @@
       justify-content: space-between;
       align-items: center;
       background-color: #ffffff;
-      padding: 10px 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      height: 120px; /* Altezza fissa del blocco */
+      padding: 0.8em 1.5em;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      height: 80px;
+    }
+
+    #logo {
+      height: 55px; /* leggermente più grande del precedente */
+    }
+
+    #datetime {
+      text-align: right;
+      font-size: 1.4em;
+      font-weight: 500;
+      color: #333;
+      line-height: 1.2;
+    }
+
+    main {
+      padding: 2em;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      border-radius: 12px;
       overflow: hidden;
     }
 
-    header img {
-      max-height: 110px; /* logo più grande */
-      width: auto;
-      object-fit: contain;
+    th, td {
+      text-align: left;
+      padding: 12px 16px;
     }
 
-    .datetime {
-      text-align: right;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      justify-content: center;
-      height: 100%;
+    th {
+      background-color: #007aff;
+      color: white;
+      text-transform: uppercase;
+      font-size: 0.9em;
+      letter-spacing: 0.5px;
     }
 
-    .datetime .time {
-      font-weight: 700;
-      font-size: 2.5em;
-      line-height: 1.1;
+    tr:nth-child(even) {
+      background-color: #f8f9fb;
     }
 
-    .datetime .date {
-      font-weight: 500;
-      font-size: 1.3em;
-      color: #004080;
-      text-transform: capitalize;
-    }
-
-    .container {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      gap: 40px;
-      padding: 20px;
-      flex-wrap: wrap;
-    }
-
-    #courses, #notes {
-      background-color: #ffffff;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      min-width: 300px;
-    }
-
-    #courses {
-      flex: 2;
-    }
-
-    #notes {
-      flex: 1;
-    }
-
-    .course {
-      border: 1px solid #ddd;
-      padding: 15px;
-      margin-bottom: 10px;
-      border-radius: 8px;
-      font-size: 1.6em;
-      font-weight: 500;
+    tr:hover {
+      background-color: #eaf3ff;
+      transition: 0.2s;
     }
   </style>
 </head>
-
 <body>
   <header>
-    <img src="CF Lampugnano blu xl.png" alt="Logo Piscina">
-    <div class="datetime">
-      <div class="time" id="clock">--:--</div>
-      <div class="date" id="date">--/--/----</div>
+    <img id="logo" src="logo.png" alt="Logo Piscina Lampugnano" />
+    <div id="datetime">
+      <div id="time"></div>
+      <div id="date"></div>
     </div>
   </header>
 
-  <script>
-    // Orologio e data con giorno della settimana
-    function updateClock() {
-      const now = new Date();
-      const h = now.getHours().toString().padStart(2, '0');
-      const m = now.getMinutes().toString().padStart(2, '0');
-      const d = now.getDate().toString().padStart(2, '0');
-      const month = (now.getMonth() + 1).toString().padStart(2, '0');
-      const year = now.getFullYear();
-      const weekday = now.toLocaleDateString('it-IT', { weekday: 'long' });
+  <main>
+    <h1 style="text-align:center; color:#007aff;">Orari Corsi Piscina Lampugnano</h1>
+    <table id="coursesTable">
+      <thead>
+        <tr id="tableHeader"></tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </main>
 
-      document.getElementById("clock").textContent = `${h}:${m}`;
-      document.getElementById("date").textContent = `${weekday} ${d}/${month}/${year}`;
+  <script>
+    // Mostra orario e data con giorno della settimana
+    function updateDateTime() {
+      const now = new Date();
+      const time = now.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+      const date = now.toLocaleDateString('it-IT', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+      document.getElementById('time').textContent = time;
+      document.getElementById('date').textContent = date.charAt(0).toUpperCase() + date.slice(1);
     }
 
-    setInterval(updateClock, 1000);
-    updateClock();
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+
+    // Carica i corsi da Google Sheets
+    async function loadCourses() {
+      try {
+        const sheetId = "1dcs1X7x84g69f14m9Sl2KmqZUbCI6lLBBfi3QCMNqWI";
+        const sheetName = "Corsi";
+        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
+        const response = await fetch(url);
+        const text = await response.text();
+
+        const json = JSON.parse(text.substring(47, text.length - 2));
+        const table = json.table;
+        const headers = table.cols.map(col => col.label);
+        const rows = table.rows.map(row => row.c.map(cell => (cell ? cell.v : "")));
+
+        const headerRow = document.getElementById("tableHeader");
+        headers.forEach(h => {
+          const th = document.createElement("th");
+          th.textContent = h;
+          headerRow.appendChild(th);
+        });
+
+        const body = document.getElementById("tableBody");
+        rows.forEach(row => {
+          const tr = document.createElement("tr");
+          row.forEach(cell => {
+            const td = document.createElement("td");
+            td.textContent = cell;
+            tr.appendChild(td);
+          });
+          body.appendChild(tr);
+        });
+      } catch (error) {
+        console.error("Errore nel caricamento dei corsi:", error);
+      }
+    }
+
+    loadCourses();
   </script>
 </body>
+</html>
