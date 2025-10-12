@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Orari Piscina Lampugnano</title>
 
-  <!-- Font Inter -->
+  <!-- Font Inter (simile a SF Pro Text / Compact) -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
@@ -70,21 +70,38 @@
     #notes { flex: 1; }
 
     .course {
+      display: flex;
       border: 1px solid #ddd;
-      padding: 15px;
-      margin-bottom: 10px;
       border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 12px;
       font-size: 1.6em;
       font-weight: 500;
     }
 
-    .course-row { display: flex; justify-content: space-between; align-items: center; font-weight: 600; }
-    .course-row div { padding: 0 5px; }
-    .course-activity { flex: 2; }
-    .course-ingresso, .course-inizio { flex: 1; text-align: center; }
-    .course-note { margin-top: 8px; font-weight: 400; }
+    .course div {
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-    #notes p { font-size: 1.4em; margin: 0 0 10px; }
+    .course .attivita {
+      flex: 2;
+      justify-content: flex-start;
+      font-weight: 700;
+      color: #003366;
+    }
+
+    .course .ingresso, .course .inizio {
+      flex: 1;
+      border-left: 2px solid rgba(0,0,0,0.1);
+    }
+
+    /* Colori stato */
+    .green { background-color: #d4edda; }
+    .yellow { background-color: #fff3cd; }
+    .gray { background-color: #eeeeee; }
   </style>
 </head>
 <body>
@@ -107,87 +124,92 @@
       const h = now.getHours().toString().padStart(2, '0');
       const m = now.getMinutes().toString().padStart(2, '0');
       const d = now.getDate().toString().padStart(2, '0');
-      const month = (now.getMonth()+1).toString().padStart(2,'0');
+      const month = (now.getMonth() + 1).toString().padStart(2, '0');
       const year = now.getFullYear();
-      const weekday = now.toLocaleDateString('it-IT',{ weekday:'long' });
+      const weekday = now.toLocaleDateString('it-IT', { weekday: 'long' });
       document.getElementById("clock").textContent = `${h}:${m}`;
       document.getElementById("date").textContent = `${weekday}, ${d}/${month}/${year}`;
     }
-    setInterval(updateClock,1000);
+    setInterval(updateClock, 1000);
     updateClock();
   </script>
 
   <script>
-    function parseTime(t){const [h,m]=t.split(":").map(Number); return h*60+m;}
-    function formatCell(cell){ if(!cell)return""; if(cell.f)return cell.f; if(typeof cell.v==='string')return cell.v; if(typeof cell.v==='number')return cell.v.toString(); return ""; }
+    function parseTime(t) {
+      const [h, m] = t.split(":").map(Number);
+      return h * 60 + m;
+    }
+
+    function formatCell(cell) {
+      if (!cell) return "";
+      if (cell.f) return cell.f;
+      if (typeof cell.v === 'string') return cell.v;
+      if (typeof cell.v === 'number') return cell.v.toString();
+      return "";
+    }
 
     async function loadCourses() {
-      const sheetCourses = 'https://docs.google.com/spreadsheets/d/1dcs1X7x84g69f14m9Sl2KmqZUbCI6lLBBfi3QCMNqWI/gviz/tq?tqx=out:json&sheet=Corsi';
-      const sheetNotes = 'https://docs.google.com/spreadsheets/d/1dcs1X7x84g69f14m9Sl2KmqZUbCI6lLBBfi3QCMNqWI/gviz/tq?tqx=out:json&sheet=Note';
+      const sheetUrl = 'https://docs.google.com/spreadsheets/d/1dcs1X7x84g69f14m9Sl2KmqZUbCI6lLBBfi3QCMNqWI/gviz/tq?tqx=out:json&sheet=Corsi';
+      const notesUrl = 'https://docs.google.com/spreadsheets/d/1dcs1X7x84g69f14m9Sl2KmqZUbCI6lLBBfi3QCMNqWI/gviz/tq?tqx=out:json&sheet=Note';
 
       try {
-        // Carica corsi
-        const resC = await fetch(sheetCourses);
-        const textC = await resC.text();
-        const jsonC = JSON.parse(textC.substring(47).slice(0,-2));
-        const rowsC = jsonC.table.rows.map(r=>r.c.map(c=>c?formatCell(c):""));
+        // CORSI
+        const res = await fetch(sheetUrl);
+        const text = await res.text();
+        const json = JSON.parse(text.substring(47).slice(0, -2));
+        const rows = json.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ""));
 
         const now = new Date();
-        const day = now.toLocaleDateString('it-IT',{weekday:'long'});
-        const currentTime = now.getHours()*60 + now.getMinutes();
+        const day = now.toLocaleDateString('it-IT', { weekday: 'long' });
+        const currentTime = now.getHours() * 60 + now.getMinutes();
 
-        const todayCourses = rowsC.filter(r=>r[0].toLowerCase()===day.toLowerCase());
-        const parsedCourses = todayCourses.filter(r=>r[0].toLowerCase()!=='giorno').map(r=>{
-          const ingresso=parseTime(r[2]);
-          const inizio=parseTime(r[3]);
-          return {attivita:r[1], oraIngresso:r[2], oraInizio:r[3], durata:parseInt(r[4]||60), note:r[5], ingressoMin:ingresso, inizioMin:inizio};
-        }).sort((a,b)=>a.ingressoMin-b.ingressoMin);
+        const todayCourses = rows.filter(r => r[0].toLowerCase() === day.toLowerCase());
+        const parsedCourses = todayCourses.map(r => ({
+          attivita: r[1],
+          oraIngresso: r[2],
+          oraInizio: r[3],
+          durata: parseInt(r[4] || 60),
+          ingressoMin: parseTime(r[2]),
+        })).sort((a, b) => a.ingressoMin - b.ingressoMin);
 
         const container = document.getElementById("courses");
-        container.innerHTML="";
-        if(parsedCourses.length===0){ container.textContent="Nessun corso previsto per oggi."; }
-        else{
-          parsedCourses.forEach(corso=>{
-            const timeToStart = corso.ingressoMin-currentTime;
-            let style="gray";
-            if(timeToStart<=0 && timeToStart>-corso.durata) style="green";
-            else if(timeToStart<=5 && timeToStart>0) style="yellow";
+        container.innerHTML = "";
 
-            const div=document.createElement("div");
-            div.className="course";
-            div.style.backgroundColor=style==="green"?"#d4edda":style==="yellow"?"#fff3cd":"#eeeeee";
-            div.innerHTML=`
-              <div class="course-row">
-                <div class="course-activity">${corso.attivita}</div>
-                <div class="course-ingresso">Ingresso: ${corso.oraIngresso}</div>
-                <div class="course-inizio">Inizio: ${corso.oraInizio}</div>
-              </div>
-              ${corso.note?`<div class="course-note">${corso.note}</div>`:""}
+        if (parsedCourses.length === 0) {
+          container.textContent = "Nessun corso previsto per oggi.";
+        } else {
+          parsedCourses.forEach(corso => {
+            const timeToStart = corso.ingressoMin - currentTime;
+            let style = "gray";
+            if (timeToStart <= 0 && timeToStart > -corso.durata) style = "green";
+            else if (timeToStart <= 5 && timeToStart > 0) style = "yellow";
+
+            const div = document.createElement("div");
+            div.className = `course ${style}`;
+            div.innerHTML = `
+              <div class="attivita">${corso.attivita}</div>
+              <div class="ingresso">Ingresso: ${corso.oraIngresso}</div>
+              <div class="inizio">Inizio: ${corso.oraInizio}</div>
             `;
             container.appendChild(div);
           });
         }
 
-        // Carica note generali
-        const resN = await fetch(sheetNotes);
-        const textN = await resN.text();
-        const jsonN = JSON.parse(textN.substring(47).slice(0,-2));
-        const rowsN = jsonN.table.rows.map(r=>r.c.map(c=>c?formatCell(c):""));
-        const notesContainer = document.getElementById("notes");
-        notesContainer.innerHTML="";
-        rowsN.forEach(n=>{
-          if(n[0]) notesContainer.innerHTML+=`<p>${n[0]}</p>`;
-        });
+        // NOTE
+        const resNotes = await fetch(notesUrl);
+        const textNotes = await resNotes.text();
+        const jsonNotes = JSON.parse(textNotes.substring(47).slice(0, -2));
+        const rowsNotes = jsonNotes.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ""));
+        document.getElementById("notes").innerHTML = rowsNotes.map(r => `<p>${r[0]}</p>`).join("");
 
-      } catch(e){
-        console.error("Errore nel caricamento:",e);
-        document.getElementById("courses").textContent="⚠️ Impossibile caricare i corsi.";
-        document.getElementById("notes").textContent="⚠️ Impossibile caricare le note.";
+      } catch (e) {
+        console.error("Errore nel caricamento dei dati:", e);
+        document.getElementById("courses").textContent = "⚠️ Impossibile caricare i corsi.";
       }
     }
 
     loadCourses();
-    setInterval(loadCourses,60000);
+    setInterval(loadCourses, 60000);
   </script>
 </body>
 </html>
