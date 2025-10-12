@@ -11,7 +11,7 @@
     body {
       font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       margin: 0;
-      background-color: #f0f8ff; /* azzurro */
+      background-color: #f0f8ff;
       color: #003366;
       letter-spacing: -0.3px;
       display: flex;
@@ -41,8 +41,8 @@
       object-fit: contain;
     }
     .datetime { text-align: right; }
-    .datetime .time { font-weight: 700; font-size: 80px; } /* ora grande come nel tuo ultimo file */
-    .datetime .date { font-weight: 500; font-size: 40px; color: #004080; }
+    .datetime .time { font-weight: 700; font-size: 80px; }   /* Ora */
+    .datetime .date { font-weight: 500; font-size: 50px; color: #004080; } /* Data */
 
     /* ====== CONTENUTO ====== */
     .container {
@@ -51,11 +51,11 @@
       justify-content: center;
       align-items: flex-start;
       padding: 20px;
-      padding-top: 180px;  /* più spazio: non tocca l'header */
-      padding-bottom: 100px; /* spazio per footer fisso */
+      padding-top: 180px;
+      padding-bottom: 100px;
     }
     #courses {
-      background-color: transparent; /* mostra l'azzurro sotto */
+      background-color: transparent;
       padding: 0;
       width: 100%;
       margin-top: 6px;
@@ -79,7 +79,7 @@
     .course .attivita {
       flex: 2;
       justify-content: flex-start;
-      font-size: 50px;
+      font-size: 60px;   /* Attività */
       font-weight: 700;
       color: #003366;
     }
@@ -88,12 +88,12 @@
       flex: 1;
       text-align: center;
       border-left: 2px solid rgba(0,0,0,0.1);
-      font-size: 50px;
+      font-size: 60px;   /* Etichette */
       font-weight: 400;
       white-space: nowrap;
     }
     .course .orario {
-      font-size: 50px;
+      font-size: 60px;   /* Orari */
       font-weight: 700;
       margin-left: 6px;
     }
@@ -124,7 +124,6 @@
       position: relative;
       white-space: nowrap;
     }
-    /* pista che scorre contenendo due copie del testo */
     .ticker__track {
       display: inline-block;
       white-space: nowrap;
@@ -132,17 +131,17 @@
       animation: ticker var(--ticker-duration, 30s) linear infinite;
     }
     .ticker__content {
-  display: inline-block;
-  padding-right: 60px; /* spazio tra le copie */
-  font-size: 40px;
-  font-weight: 500;
-  color: #003366;
-  line-height: 1.3;      /* alza leggermente la riga */
-  transform: translateY(8px); /* spostamento fine verso il basso */
-}
+      display: inline-block;
+      padding-right: 60px;
+      font-size: 50px;     /* Note */
+      font-weight: 500;
+      color: #003366;
+      line-height: 1.3;
+      transform: translateY(8px);
+    }
     @keyframes ticker {
       0%   { transform: translateX(0); }
-      100% { transform: translateX(-50%); } /* scorre di una “copia” */
+      100% { transform: translateX(-50%); }
     }
   </style>
 </head>
@@ -172,7 +171,6 @@
   </footer>
 
   <script>
-    /* ====== OROLOGIO ====== */
     function updateClock() {
       const now = new Date();
       const h = now.getHours().toString().padStart(2, '0');
@@ -186,125 +184,6 @@
     }
     setInterval(updateClock, 1000);
     updateClock();
-  </script>
-
-  <script>
-    /* ====== UTILS ====== */
-    function parseTime(t) {
-      if (!t || typeof t !== 'string' || !t.includes(':')) return NaN;
-      const [h, m] = t.split(":").map(Number);
-      return (h * 60) + m;
-    }
-    function formatCell(cell) {
-      if (!cell) return "";
-      if (cell.f) return cell.f;
-      if (typeof cell.v === 'string') return cell.v;
-      if (typeof cell.v === 'number') return cell.v.toString();
-      return "";
-    }
-
-    /* ====== CARICAMENTO DATI ====== */
-    async function loadAll() {
-      const SHEET_BASE = 'https://docs.google.com/spreadsheets/d/1dcs1X7x84g69f14m9Sl2KmqZUbCI6lLBBfi3QCMNqWI/gviz/tq?tqx=out:json&sheet=';
-      const COURSES_URL = SHEET_BASE + 'Corsi';
-      const NOTES_URL   = SHEET_BASE + 'Note';
-
-      try {
-        /* ---- CORSI ---- */
-        const resC = await fetch(COURSES_URL);
-        const txtC = await resC.text();
-        const jsonC = JSON.parse(txtC.substring(47).slice(0, -2));
-        const rowsC = jsonC.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ""));
-
-        const now = new Date();
-        const currentTime = now.getHours() * 60 + now.getMinutes();
-        const day = now.toLocaleDateString('it-IT', { weekday: 'long' }).toLowerCase();
-
-        let parsed = rowsC
-          .filter(r => (r[0] || '').toLowerCase() === day)
-          .map(r => {
-            const ingressoMin = parseTime(r[2]);
-            const inizioMin   = parseTime(r[3]);
-            const durata      = Number.parseInt(r[4]) || 60;
-            return {
-              attivita: r[1] || '',
-              oraIngresso: r[2] || '',
-              oraInizio: r[3] || '',
-              durata,
-              ingressoMin,
-              inizioMin
-            };
-          })
-          .filter(c => Number.isFinite(c.ingressoMin) && currentTime <= (c.ingressoMin + c.durata))
-          .sort((a, b) => a.ingressoMin - b.ingressoMin);
-
-        const coursesBox = document.getElementById('courses');
-        coursesBox.innerHTML = '';
-
-        if (parsed.length === 0) {
-          coursesBox.textContent = 'Nessun corso previsto (o corsi di oggi già conclusi).';
-        } else {
-          parsed.forEach(corso => {
-            const timeToStart = corso.ingressoMin - currentTime;
-            let style = 'gray';
-            if (timeToStart <= 0 && timeToStart > -corso.durata) style = 'green';
-            else if (timeToStart <= 5 && timeToStart > 0)        style = 'yellow';
-
-            const div = document.createElement('div');
-            div.className = `course ${style}`;
-            div.innerHTML = `
-              <div class="attivita">${corso.attivita}</div>
-              <div class="ingresso">Ingresso <span class="orario">${corso.oraIngresso}</span></div>
-              <div class="inizio">Inizio <span class="orario">${corso.oraInizio}</span></div>
-            `;
-            coursesBox.appendChild(div);
-          });
-        }
-
-        /* ---- NOTE (ticker continuo) ---- */
-        const resN = await fetch(NOTES_URL);
-        const txtN = await resN.text();
-        const jsonN = JSON.parse(txtN.substring(47).slice(0, -2));
-        const rowsN = jsonN.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ""));
-
-        const notesText = rowsN
-          .filter(r => r[0] && r[0].trim() !== '')
-          .map(r => r[0])
-          .join("  •  ") || '—';
-
-        // Inserisco due copie identiche del testo (scorrimento infinito)
-        const copy1 = document.getElementById('ticker-copy-1');
-        const copy2 = document.getElementById('ticker-copy-2');
-        copy1.textContent = notesText;
-        copy2.textContent = notesText;
-
-        // Calcolo durata in base alla larghezza del testo per avere una velocità costante
-        const track = document.getElementById('ticker-track');
-        const ticker = document.getElementById('ticker');
-
-        // forza il browser a misurare le larghezze aggiornate
-        requestAnimationFrame(() => {
-          const contentWidth = copy1.offsetWidth;              // larghezza di una copia
-          const containerWidth = ticker.offsetWidth;
-          const PIXELS_PER_SECOND = 120;                       // <--- regola qui la velocità (più alto = più veloce)
-
-          // distanza da percorrere per un ciclo (una copia = 50% della track)
-          const distance = Math.max(contentWidth, containerWidth);
-          const durationSec = Math.max(15, distance / PIXELS_PER_SECOND);
-
-          track.style.setProperty('--ticker-duration', `${durationSec}s`);
-        });
-
-      } catch (err) {
-        console.error('Errore nel caricamento:', err);
-        document.getElementById('courses').textContent = '⚠️ Impossibile caricare i corsi.';
-        document.getElementById('ticker-copy-1').textContent = '⚠️ Impossibile caricare le note.';
-        document.getElementById('ticker-copy-2').textContent = '⚠️ Impossibile caricare le note.';
-      }
-    }
-
-    loadAll();
-    setInterval(loadAll, 60000);
   </script>
 </body>
 </html>
