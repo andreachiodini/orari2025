@@ -19,7 +19,7 @@
       min-height: 100vh;
     }
 
-    header, footer {
+    header {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -36,10 +36,7 @@
       object-fit: contain;
     }
 
-    .datetime {
-      text-align: right;
-      font-size: 2em;
-    }
+    .datetime { text-align: right; font-size: 2em; }
     .datetime .time { font-weight: 700; font-size: 2.0em; }
     .datetime .date { font-weight: 500; font-size: 1.4em; color: #004080; }
 
@@ -87,7 +84,7 @@
       flex: 1;
       text-align: center;
       border-left: 2px solid rgba(0,0,0,0.1);
-      font-weight: 400; /* normale per etichetta */
+      font-weight: 400;
     }
     .course .orario {
       font-weight: 700;
@@ -99,20 +96,32 @@
     .yellow { background-color: #fff3cd; }
     .gray   { background-color: #eeeeee; }
 
-    /* --- NOTE GENERALI (footer in basso) --- */
+    /* --- FOOTER TICKER --- */
     footer {
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-      font-size: 1.8em;
-      font-weight: 500;
+      background: #ffffff;
+      box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
+      height: 60px;  /* metà header */
+      overflow: hidden;
+      display: flex;
+      align-items: center;
     }
-    #notes {
-      margin-top: 5px;
+    .ticker {
       width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      position: relative;
     }
-    #notes p {
-      margin: 5px 0;
+    .ticker__content {
+      display: inline-block;
+      padding-left: 100%;
+      animation: ticker 20s linear infinite;
+      font-size: 1.6em;
+      font-weight: 500;
+      color: #003366;
+    }
+    @keyframes ticker {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
     }
   </style>
 </head>
@@ -131,10 +140,13 @@
     <div id="courses">Caricamento corsi...</div>
   </div>
 
-  <!-- FOOTER CON LE NOTE -->
+  <!-- FOOTER TICKER -->
   <footer>
-    <strong>Note generali</strong>
-    <div id="notes">Caricamento note...</div>
+    <div class="ticker">
+      <div class="ticker__content" id="ticker-text">
+        Caricamento note...
+      </div>
+    </div>
   </footer>
 
   <script>
@@ -226,22 +238,23 @@
           });
         }
 
-        // ===== NOTE =====
+        // ===== NOTE (ticker) =====
         const resN = await fetch(NOTES_URL);
         const txtN = await resN.text();
         const jsonN = JSON.parse(txtN.substring(47).slice(0, -2));
         const rowsN = jsonN.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ""));
 
-        const notesBox = document.getElementById('notes');
-        notesBox.innerHTML = rowsN
+        const notesText = rowsN
           .filter(r => r[0] && r[0].trim() !== '')
-          .map(r => `<p>${r[0]}</p>`)
-          .join('') || '—';
+          .map(r => r[0])
+          .join("  •  ") || '—';
+
+        document.getElementById('ticker-text').textContent = notesText;
 
       } catch (err) {
         console.error('Errore nel caricamento:', err);
         document.getElementById('courses').textContent = '⚠️ Impossibile caricare i corsi.';
-        document.getElementById('notes').textContent   = '⚠️ Impossibile caricare le note.';
+        document.getElementById('ticker-text').textContent = '⚠️ Impossibile caricare le note.';
       }
     }
 
