@@ -41,7 +41,7 @@
       object-fit: contain;
     }
     .datetime { text-align: right; }
-    .datetime .time { font-weight: 700; font-size: 80px; } /* Ora */
+    .datetime .time { font-weight: 700; font-size: 80px; } /* ora grande come nel tuo ultimo file */
     .datetime .date { font-weight: 500; font-size: 40px; color: #004080; }
 
     /* ====== CONTENUTO ====== */
@@ -51,13 +51,14 @@
       justify-content: center;
       align-items: flex-start;
       padding: 20px;
-      padding-top: 160px;   /* spazio per header */
-      padding-bottom: 100px; /* spazio per footer */
+      padding-top: 180px;  /* più spazio: non tocca l'header */
+      padding-bottom: 100px; /* spazio per footer fisso */
     }
     #courses {
-      background-color: transparent; /* trasparente = azzurro dietro */
+      background-color: transparent; /* mostra l'azzurro sotto */
       padding: 0;
       width: 100%;
+      margin-top: 6px;
     }
 
     /* ====== CORSI ====== */
@@ -118,21 +119,28 @@
     }
     .ticker {
       width: 100%;
-      white-space: nowrap;
+      height: 100%;
       overflow: hidden;
       position: relative;
+      white-space: nowrap;
+    }
+    /* pista che scorre contenendo due copie del testo */
+    .ticker__track {
+      display: inline-block;
+      white-space: nowrap;
+      will-change: transform;
+      animation: ticker var(--ticker-duration, 30s) linear infinite;
     }
     .ticker__content {
       display: inline-block;
-      padding-left: 100%;
-      animation: ticker 40s linear infinite;
+      padding-right: 60px; /* spazio tra le copie */
       font-size: 40px;
       font-weight: 500;
       color: #003366;
     }
     @keyframes ticker {
       0%   { transform: translateX(0); }
-      100% { transform: translateX(-100%); }
+      100% { transform: translateX(-50%); } /* scorre di una “copia” */
     }
   </style>
 </head>
@@ -153,14 +161,16 @@
 
   <!-- FOOTER TICKER -->
   <footer>
-    <div class="ticker">
-      <div class="ticker__content" id="ticker-text">
-        Caricamento note...
+    <div class="ticker" id="ticker">
+      <div class="ticker__track" id="ticker-track">
+        <span class="ticker__content" id="ticker-copy-1">Caricamento note...</span>
+        <span class="ticker__content" id="ticker-copy-2">Caricamento note...</span>
       </div>
     </div>
   </footer>
 
   <script>
+    /* ====== OROLOGIO ====== */
     function updateClock() {
       const now = new Date();
       const h = now.getHours().toString().padStart(2, '0');
@@ -177,6 +187,7 @@
   </script>
 
   <script>
+    /* ====== UTILS ====== */
     function parseTime(t) {
       if (!t || typeof t !== 'string' || !t.includes(':')) return NaN;
       const [h, m] = t.split(":").map(Number);
@@ -190,12 +201,14 @@
       return "";
     }
 
+    /* ====== CARICAMENTO DATI ====== */
     async function loadAll() {
       const SHEET_BASE = 'https://docs.google.com/spreadsheets/d/1dcs1X7x84g69f14m9Sl2KmqZUbCI6lLBBfi3QCMNqWI/gviz/tq?tqx=out:json&sheet=';
       const COURSES_URL = SHEET_BASE + 'Corsi';
       const NOTES_URL   = SHEET_BASE + 'Note';
 
       try {
+        /* ---- CORSI ---- */
         const resC = await fetch(COURSES_URL);
         const txtC = await resC.text();
         const jsonC = JSON.parse(txtC.substring(47).slice(0, -2));
@@ -246,6 +259,7 @@
           });
         }
 
+        /* ---- NOTE (ticker continuo) ---- */
         const resN = await fetch(NOTES_URL);
         const txtN = await resN.text();
         const jsonN = JSON.parse(txtN.substring(47).slice(0, -2));
@@ -256,12 +270,34 @@
           .map(r => r[0])
           .join("  •  ") || '—';
 
-        document.getElementById('ticker-text').textContent = notesText;
+        // Inserisco due copie identiche del testo (scorrimento infinito)
+        const copy1 = document.getElementById('ticker-copy-1');
+        const copy2 = document.getElementById('ticker-copy-2');
+        copy1.textContent = notesText;
+        copy2.textContent = notesText;
+
+        // Calcolo durata in base alla larghezza del testo per avere una velocità costante
+        const track = document.getElementById('ticker-track');
+        const ticker = document.getElementById('ticker');
+
+        // forza il browser a misurare le larghezze aggiornate
+        requestAnimationFrame(() => {
+          const contentWidth = copy1.offsetWidth;              // larghezza di una copia
+          const containerWidth = ticker.offsetWidth;
+          const PIXELS_PER_SECOND = 120;                       // <--- regola qui la velocità (più alto = più veloce)
+
+          // distanza da percorrere per un ciclo (una copia = 50% della track)
+          const distance = Math.max(contentWidth, containerWidth);
+          const durationSec = Math.max(15, distance / PIXELS_PER_SECOND);
+
+          track.style.setProperty('--ticker-duration', `${durationSec}s`);
+        });
 
       } catch (err) {
         console.error('Errore nel caricamento:', err);
         document.getElementById('courses').textContent = '⚠️ Impossibile caricare i corsi.';
-        document.getElementById('ticker-text').textContent = '⚠️ Impossibile caricare le note.';
+        document.getElementById('ticker-copy-1').textContent = '⚠️ Impossibile caricare le note.';
+        document.getElementById('ticker-copy-2').textContent = '⚠️ Impossibile caricare le note.';
       }
     }
 
