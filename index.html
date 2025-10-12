@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Orari Piscina Lampugnano</title>
 
   <!-- Font Inter -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <style>
+    /* ====== BASE ====== */
     body {
       font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       margin: 0;
@@ -19,6 +20,7 @@
       min-height: 100vh;
     }
 
+    /* ====== HEADER ====== */
     header {
       display: flex;
       justify-content: space-between;
@@ -28,18 +30,17 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       height: 120px;
     }
-
     header img {
       height: 100%;
       width: auto;
       max-width: 250px;
       object-fit: contain;
     }
-
     .datetime { text-align: right; }
-    .datetime .time { font-weight: 700; font-size: 34px; }   /* Ora */
-    .datetime .date { font-weight: 500; font-size: 24px; color: #004080; } /* Data */
+    .datetime .time { font-weight: 700; font-size: 34px; }     /* ⏰ Ora 34px */
+    .datetime .date { font-weight: 500; font-size: 24px; color: #004080; } /* 📅 Data 24px */
 
+    /* ====== CONTENUTO ====== */
     .container {
       flex: 1;
       display: flex;
@@ -47,7 +48,6 @@
       align-items: flex-start;
       padding: 20px;
     }
-
     #courses {
       background-color: #ffffff;
       padding: 20px;
@@ -57,26 +57,27 @@
       max-width: 1200px;
     }
 
-    /* --- CORSI (3 colonne con divisori) --- */
+    /* ====== CORSI (3 colonne con divisori) ====== */
     .course {
       display: flex;
       border: 1px solid #ddd;
       border-radius: 8px;
       overflow: hidden;
       margin-bottom: 12px;
-      font-size: 32px; /* base per etichette */
-      font-weight: 500;
+      font-weight: 400;            /* etichette normali */
+      background-color: #eeeeee;   /* default (grigio) */
     }
-    .course div {
+    .course > div {
       padding: 15px 20px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
     .course .attivita {
-      flex: 2;
+      flex: 2;                     /* più larga */
       justify-content: flex-start;
-      font-weight: 700; /* bold attività */
+      font-size: 32px;             /* 🏊 Attività 32px */
+      font-weight: 700;            /* bold attività */
       color: #003366;
     }
     .course .ingresso,
@@ -84,11 +85,14 @@
       flex: 1;
       text-align: center;
       border-left: 2px solid rgba(0,0,0,0.1);
-      font-weight: 400; /* normale per etichette */
+      font-size: 32px;             /* 🚪 etichette 32px */
+      font-weight: 400;            /* normale per etichetta */
+      white-space: nowrap;
     }
     .course .orario {
-      font-weight: 700; /* bold solo orari */
-      margin-left: 6px;
+      font-size: 32px;             /* ⏱ orari 32px */
+      font-weight: 700;            /* bold orario */
+      margin-left: 6px;            /* spazio dopo etichetta */
     }
 
     /* Colori stato */
@@ -96,11 +100,11 @@
     .yellow { background-color: #fff3cd; }
     .gray   { background-color: #eeeeee; }
 
-    /* --- FOOTER TICKER --- */
+    /* ====== FOOTER TICKER ====== */
     footer {
       background: #ffffff;
       box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
-      height: 60px;
+      height: 60px;                /* metà header */
       overflow: hidden;
       display: flex;
       align-items: center;
@@ -115,7 +119,7 @@
       display: inline-block;
       padding-left: 100%;
       animation: ticker 20s linear infinite;
-      font-size: 24px; /* Note ticker */
+      font-size: 24px;             /* 📰 Note ticker 24px */
       font-weight: 500;
       color: #003366;
     }
@@ -128,7 +132,7 @@
 <body>
   <!-- HEADER -->
   <header>
-    <img src="CF Lampugnano blu xl.png" alt="Logo Piscina">
+    <img src="CF Lampugnano blu xl.png" alt="Logo Piscina" />
     <div class="datetime">
       <div class="time" id="clock">--:--</div>
       <div class="date" id="date">--, --/--/----</div>
@@ -150,7 +154,7 @@
   </footer>
 
   <script>
-    // Orologio + giorno settimana
+    /* ====== OROLOGIO ====== */
     function updateClock() {
       const now = new Date();
       const h = now.getHours().toString().padStart(2, '0');
@@ -167,7 +171,7 @@
   </script>
 
   <script>
-    // Utils
+    /* ====== UTILS ====== */
     function parseTime(t) {
       if (!t || typeof t !== 'string' || !t.includes(':')) return NaN;
       const [h, m] = t.split(":").map(Number);
@@ -181,13 +185,14 @@
       return "";
     }
 
+    /* ====== CARICAMENTO DATI ====== */
     async function loadAll() {
       const SHEET_BASE = 'https://docs.google.com/spreadsheets/d/1dcs1X7x84g69f14m9Sl2KmqZUbCI6lLBBfi3QCMNqWI/gviz/tq?tqx=out:json&sheet=';
       const COURSES_URL = SHEET_BASE + 'Corsi';
       const NOTES_URL   = SHEET_BASE + 'Note';
 
       try {
-        // ===== CORSI =====
+        /* ---- CORSI ---- */
         const resC = await fetch(COURSES_URL);
         const txtC = await resC.text();
         const jsonC = JSON.parse(txtC.substring(47).slice(0, -2));
@@ -198,7 +203,7 @@
         const day = now.toLocaleDateString('it-IT', { weekday: 'long' }).toLowerCase();
 
         let parsed = rowsC
-          .filter(r => (r[0] || '').toLowerCase() === day)
+          .filter(r => (r[0] || '').toLowerCase() === day)  // Giorno corrispondente
           .map(r => {
             const ingressoMin = parseTime(r[2]);
             const inizioMin   = parseTime(r[3]);
@@ -212,6 +217,7 @@
               inizioMin
             };
           })
+          // Rimuove i corsi già finiti: fine = ingresso + durata
           .filter(c => Number.isFinite(c.ingressoMin) && currentTime <= (c.ingressoMin + c.durata))
           .sort((a, b) => a.ingressoMin - b.ingressoMin);
 
@@ -224,8 +230,8 @@
           parsed.forEach(corso => {
             const timeToStart = corso.ingressoMin - currentTime;
             let style = 'gray';
-            if (timeToStart <= 0 && timeToStart > -corso.durata) style = 'green';
-            else if (timeToStart <= 5 && timeToStart > 0)        style = 'yellow';
+            if (timeToStart <= 0 && timeToStart > -corso.durata) style = 'green';   // in corso
+            else if (timeToStart <= 5 && timeToStart > 0)        style = 'yellow';  // in partenza
 
             const div = document.createElement('div');
             div.className = `course ${style}`;
@@ -238,7 +244,7 @@
           });
         }
 
-        // ===== NOTE (ticker) =====
+        /* ---- NOTE (ticker) ---- */
         const resN = await fetch(NOTES_URL);
         const txtN = await resN.text();
         const jsonN = JSON.parse(txtN.substring(47).slice(0, -2));
@@ -259,7 +265,7 @@
     }
 
     loadAll();
-    setInterval(loadAll, 60000);
+    setInterval(loadAll, 60000); // aggiorna ogni minuto
   </script>
 </body>
 </html>
