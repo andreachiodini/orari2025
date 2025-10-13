@@ -58,10 +58,12 @@
       background-color: transparent;
       padding: 0;
       width: 100%;
-      max-width: 1600px;         /* limite massimo larghezza */
+      max-width: 1600px;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      align-items: center;       /* centra anche i box */
+      gap: 40px;                 /* spazio tra i box */
     }
 
     /* ====== CORSI ====== */
@@ -70,7 +72,7 @@
       border: 1px solid #ddd;
       border-radius: 8px;
       overflow: hidden;
-      margin-bottom: 14px;
+      margin: 0;                 /* niente margine, usa gap */
       background-color: #eeeeee;
       width: 100%;
     }
