@@ -27,111 +27,22 @@
       background-color: #ffffff;
       padding: 10px 20px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      height: 140px;              /* altezza invariata */
+      height: 140px;
       position: fixed;
-      top: 0; left: 0; right: 0;
+      top: 0;
+      left: 0;
+      right: 0;
       z-index: 1000;
-      overflow: hidden;           /* contiene le decorazioni */
-      border-bottom: 6px solid #ff6a00; /* BORDO ARANCIONE VISIBILE */
     }
-
-    /* wrapper logo per eventuali aggiunte future */
-    .logo-wrap {
-      position: relative;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      z-index: 2;
-    }
-    .logo-wrap img {
+    header img {
       height: 100%;
       width: auto;
       max-width: 280px;
       object-fit: contain;
     }
-
-    .datetime { text-align: right; position: relative; z-index: 2; }
+    .datetime { text-align: right; }
     .datetime .time { font-weight: 700; font-size: 80px; }
     .datetime .date { font-weight: 500; font-size: 50px; color: #004080; }
-
-    /* ====== DECORAZIONI VISIBILI (solo header) ====== */
-    .halloween-strong {
-      position: absolute;
-      inset: 0;
-      pointer-events: none; /* non interferisce con l'UI */
-      z-index: 1;
-    }
-
-    /* Zucche grandi ai lati, molto visibili */
-    .pumpkin-big {
-      position: absolute;
-      bottom: -4px;
-      width: 120px;
-      height: 120px;
-      opacity: 1;
-      filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3));
-    }
-    .pumpkin-big.left  { left: 6px; }
-    .pumpkin-big.right { right: 6px; transform: scaleX(-1); }
-
-    /* Ragno grande appeso vicino all'orologio */
-    .spider-wrap {
-      position: absolute;
-      top: -20px;                 /* parte del filo fuori */
-      right: 220px;               /* vicino all’orologio, regola se serve */
-      width: 40px;
-      height: 180px;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      opacity: 0.95;
-    }
-    .spider-line {
-      width: 2px;
-      height: 140px;
-      background: #111;
-    }
-    .spider {
-      width: 40px;
-      height: 40px;
-      margin-top: 0;
-      background: #111;
-      border-radius: 50% 50% 45% 45%;
-      position: relative;
-      animation: spiderSwing 3.2s ease-in-out infinite;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.35);
-    }
-    .spider::before, .spider::after {
-      content: "";
-      position: absolute;
-      top: 10px;
-      width: 22px;
-      height: 22px;
-      background: #111;
-      border-radius: 50%;
-    }
-    .spider::before { left: -16px; }
-    .spider::after  { right: -16px; }
-    /* zampette */
-    .leg {
-      position: absolute;
-      width: 18px;
-      height: 2px;
-      background: #111;
-      top: 14px;
-    }
-    .leg.l1 { left: -26px; transform: rotate(25deg); }
-    .leg.l2 { left: -26px; top: 20px; transform: rotate(5deg); }
-    .leg.l3 { left: -26px; top: 26px; transform: rotate(-15deg); }
-    .leg.r1 { right: -26px; transform: rotate(-25deg); }
-    .leg.r2 { right: -26px; top: 20px; transform: rotate(-5deg); }
-    .leg.r3 { right: -26px; top: 26px; transform: rotate(15deg); }
-
-    @keyframes spiderSwing {
-      0%   { transform: rotate(0deg) translateX(0); }
-      50%  { transform: rotate(6deg) translateX(3px); }
-      100% { transform: rotate(0deg) translateX(0); }
-    }
 
     /* ====== CONTENUTO ====== */
     .container {
@@ -164,7 +75,6 @@
       margin: 0;                 /* niente margine, usa gap */
       background-color: #eeeeee;
       width: 100%;
-      z-index: 2;                /* sopra alle decorazioni header */
     }
     .course > div {
       padding: 18px 22px;
@@ -208,9 +118,10 @@
       display: flex;
       align-items: center;
       position: fixed;
-      bottom: 0; left: 0; right: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
       z-index: 1000;
-      border-top: 3px solid #ff6a00; /* richiamo arancione sotto */
     }
     .ticker {
       width: 100%;
@@ -235,54 +146,15 @@
       transform: translateY(8px);
     }
     @keyframes ticker {
-      0%   { transform: translateX(0) }
-      100% { transform: translateX(-50%) }
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
     }
   </style>
 </head>
 <body>
   <!-- HEADER -->
   <header>
-    <!-- Decorazioni Halloween visibili -->
-    <div class="halloween-strong">
-      <!-- Zucche grandi -->
-      <svg class="pumpkin-big left" viewBox="0 0 100 100" aria-hidden="true">
-        <ellipse cx="50" cy="60" rx="34" ry="26" fill="#ff6a00"/>
-        <ellipse cx="38" cy="60" rx="20" ry="22" fill="#ff7f1a"/>
-        <ellipse cx="62" cy="60" rx="20" ry="22" fill="#ff7f1a"/>
-        <rect x="47" y="26" width="6" height="14" fill="#5b8a3c" />
-        <path d="M35,65 L45,60 L35,55 M65,65 L55,60 L65,55" stroke="#321" stroke-width="3" fill="none"/>
-        <circle cx="42" cy="58" r="4" fill="#321"/>
-        <circle cx="58" cy="58" r="4" fill="#321"/>
-        <path d="M42,69 Q50,75 58,69" stroke="#321" stroke-width="3" fill="none"/>
-      </svg>
-      <svg class="pumpkin-big right" viewBox="0 0 100 100" aria-hidden="true">
-        <ellipse cx="50" cy="60" rx="34" ry="26" fill="#ff6a00"/>
-        <ellipse cx="38" cy="60" rx="20" ry="22" fill="#ff7f1a"/>
-        <ellipse cx="62" cy="60" rx="20" ry="22" fill="#ff7f1a"/>
-        <rect x="47" y="26" width="6" height="14" fill="#5b8a3c" />
-        <path d="M35,65 L45,60 L35,55 M65,65 L55,60 L65,55" stroke="#321" stroke-width="3" fill="none"/>
-        <circle cx="42" cy="58" r="4" fill="#321"/>
-        <circle cx="58" cy="58" r="4" fill="#321"/>
-        <path d="M42,69 Q50,75 58,69" stroke="#321" stroke-width="3" fill="none"/>
-      </svg>
-
-      <!-- Ragno grande appeso vicino all'orologio -->
-      <div class="spider-wrap" aria-hidden="true">
-        <div class="spider-line"></div>
-        <div class="spider">
-          <span class="leg l1"></span><span class="leg l2"></span><span class="leg l3"></span>
-          <span class="leg r1"></span><span class="leg r2"></span><span class="leg r3"></span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Logo -->
-    <div class="logo-wrap">
-      <img src="CF Lampugnano blu xl.png" alt="Logo Piscina" />
-    </div>
-
-    <!-- Ora/Data -->
+    <img src="CF Lampugnano blu xl.png" alt="Logo Piscina" />
     <div class="datetime">
       <div class="time" id="clock">--:--</div>
       <div class="date" id="date">--, --/--/----</div>
@@ -325,7 +197,7 @@
     /* ====== UTILS ====== */
     function parseTime(t) {
       if (!t || typeof t !== 'string' || !t.includes(':')) return NaN;
-      const [h, m] = t split(":").map(Number);
+      const [h, m] = t.split(":").map(Number);
       return (h * 60) + m;
     }
     function formatCell(cell) {
@@ -381,7 +253,7 @@
               text-align:center;
               font-size:60px;
               font-weight:500;
-              color:#00366
+              color:#003366;
               padding:40px 0;">
               🏊‍♂️ Le attività di oggi sono terminate.<br>Ti aspettiamo domani!
             </div>`;
@@ -426,7 +298,7 @@
         requestAnimationFrame(() => {
           const contentWidth = copy1.offsetWidth;
           const containerWidth = ticker.offsetWidth;
-          const PIXELS_PER_SECOND = 120;
+          const PIXELS_PER_SECOND = 140;
 
           const distance = Math.max(contentWidth, containerWidth);
           const durationSec = Math.max(15, distance / PIXELS_PER_SECOND);
