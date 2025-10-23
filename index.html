@@ -33,6 +33,7 @@
       left: 0;
       right: 0;
       z-index: 1000;
+      overflow: hidden; /* per contenere le decorazioni assolute */
     }
     header img {
       height: 100%;
@@ -43,6 +44,49 @@
     .datetime { text-align: right; }
     .datetime .time { font-weight: 700; font-size: 80px; }
     .datetime .date { font-weight: 500; font-size: 50px; color: #004080; }
+
+    /* ====== DECORAZIONE HALLOWEEN (solo header) ====== */
+    .halloween-deco {
+      position: absolute;
+      inset: 0;
+      pointer-events: none; /* non bloccare click/hover */
+      z-index: 0;
+    }
+    /* ragnatele agli angoli (SVG inline come background) */
+    .web-top-left, .web-top-right {
+      position: absolute;
+      top: 0;
+      width: 140px;
+      height: 140px;
+      opacity: 0.18; /* discreto */
+      animation: webSwing 6s ease-in-out infinite;
+      transform-origin: top;
+      filter: drop-shadow(0 1px 0 rgba(0,0,0,0.05));
+    }
+    .web-top-left { left: 0; }
+    .web-top-right { right: 0; transform: scaleX(-1); }
+
+    /* Pipistrelli */
+    .bat {
+      position: absolute;
+      width: 80px;
+      height: 40px;
+      opacity: 0.25;     /* molto soft per non “sporcare” */
+      animation: batFloat 9s ease-in-out infinite;
+    }
+    .bat.b1 { left: 22%; top: 10px; animation-delay: 0.2s; }
+    .bat.b2 { left: 62%; top: 20px; animation-delay: 1.1s; transform: scale(0.9); }
+
+    @keyframes batFloat {
+      0%   { transform: translateY(0)  }
+      50%  { transform: translateY(8px) }
+      100% { transform: translateY(0) }
+    }
+    @keyframes webSwing {
+      0%   { transform: rotate(0deg) }
+      50%  { transform: rotate(2.2deg) }
+      100% { transform: rotate(0deg) }
+    }
 
     /* ====== CONTENUTO ====== */
     .container {
@@ -75,6 +119,7 @@
       margin: 0;                 /* niente margine, usa gap */
       background-color: #eeeeee;
       width: 100%;
+      z-index: 1;                /* sopra alle decorazioni */
     }
     .course > div {
       padding: 18px 22px;
@@ -154,6 +199,24 @@
 <body>
   <!-- HEADER -->
   <header>
+    <!-- Decorazioni Halloween (solo grafica) -->
+    <div class="halloween-deco">
+      <!-- Ragnatele (SVG minimal) -->
+      <svg class="web-top-left" viewBox="0 0 100 100" aria-hidden="true">
+        <path d="M0,0 L100,0 M0,0 L0,100 M0,0 C40,0 60,20 100,20 M0,0 C0,40 20,60 20,100 M0,0 C30,0 50,30 80,30 M0,0 C0,30 30,50 30,80" fill="none" stroke="#000" stroke-opacity="0.4" stroke-width="1.2"/>
+      </svg>
+      <svg class="web-top-right" viewBox="0 0 100 100" aria-hidden="true">
+        <path d="M0,0 L100,0 M0,0 L0,100 M0,0 C40,0 60,20 100,20 M0,0 C0,40 20,60 20,100 M0,0 C30,0 50,30 80,30 M0,0 C0,30 30,50 30,80" fill="none" stroke="#000" stroke-opacity="0.4" stroke-width="1.2"/>
+      </svg>
+      <!-- Pipistrelli -->
+      <svg class="bat b1" viewBox="0 0 200 100" aria-hidden="true">
+        <path d="M10,60 Q40,10 70,60 Q100,10 130,60 Q160,10 190,60 Q150,50 130,80 Q100,50 70,80 Q40,50 10,60 Z" fill="#000"/>
+      </svg>
+      <svg class="bat b2" viewBox="0 0 200 100" aria-hidden="true">
+        <path d="M10,60 Q40,10 70,60 Q100,10 130,60 Q160,10 190,60 Q150,50 130,80 Q100,50 70,80 Q40,50 10,60 Z" fill="#000"/>
+      </svg>
+    </div>
+
     <img src="CF Lampugnano blu xl.png" alt="Logo Piscina" />
     <div class="datetime">
       <div class="time" id="clock">--:--</div>
@@ -191,6 +254,14 @@
     }
     setInterval(updateClock, 1000);
     updateClock();
+
+    /* (Opzionale) Attiva decorazioni solo dal 15 al 31 ottobre
+       Scommenta per abilitarlo automaticamente:
+    const today = new Date();
+    if (!(today.getMonth() === 9 && today.getDate() >= 15 && today.getDate() <= 31)) {
+      document.querySelector('.halloween-deco').style.display = 'none';
+    }
+    */
   </script>
 
   <script>
@@ -298,7 +369,7 @@
         requestAnimationFrame(() => {
           const contentWidth = copy1.offsetWidth;
           const containerWidth = ticker.offsetWidth;
-          const PIXELS_PER_SECOND = 140;
+          const PIXELS_PER_SECOND = 120;
 
           const distance = Math.max(contentWidth, containerWidth);
           const durationSec = Math.max(15, distance / PIXELS_PER_SECOND);
