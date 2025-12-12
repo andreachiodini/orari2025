@@ -2,180 +2,139 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <title>Orari Piscina Lampugnano - Natale</title>
-
-  <!-- Font Inter -->
+  <title>Orari Piscina Lampugnano</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <style>
-    /* ----------------- BASE ----------------- */
-    :root{
-      --accent:#003366;
-      --accent-blue:#004080;
-      --bg:#f0f8ff;
+    :root {
+      --primary-color: #003366;
+      --bg-color: #f0f8ff;
+      --header-height: 140px;
+      --footer-height: 80px;
     }
-    html,body{height:100%;margin:0;}
+
     body {
       font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       margin: 0;
-      background-color: var(--bg);
-      color: var(--accent);
-      letter-spacing: -0.3px;
+      background-color: var(--bg-color);
+      color: var(--primary-color);
+      letter-spacing: -0.5px;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
-      overflow-x: hidden;
+      height: 100vh;
+      overflow: hidden; /* Evita scrollbar indesiderate su monitor TV */
     }
 
-    /* ----------------- HEADER ----------------- */
+    /* ====== HEADER ====== */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       background-color: #ffffff;
-      padding: 10px 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      height: 140px;
+      padding: 0 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      height: var(--header-height);
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 1000;
     }
     header img {
-      height: 100%;
+      height: 70%; /* Adatta l'immagine all'altezza header */
       width: auto;
-      max-width: 280px;
       object-fit: contain;
-      z-index: 5;
     }
-    .datetime { text-align: right; z-index:5; }
-    .datetime .time { font-weight: 700; font-size: 80px; color: var(--accent); }
-    .datetime .date { font-weight: 500; font-size: 50px; color: var(--accent-blue); }
+    .datetime { text-align: right; line-height: 1.1; }
+    .datetime .time { font-weight: 700; font-size: 75px; letter-spacing: -2px; }
+    .datetime .date { font-weight: 500; font-size: 38px; color: #004080; text-transform: capitalize; }
 
-    /* ----------------- NATALIZIE (DECORAZIONI) ----------------- */
-    /* wrapper assoluto dentro l'header per decorazioni: pointer-events none */
-    .xmas-deco {
-      pointer-events: none;
-      position: absolute;
-      inset: 0;
-      z-index: 2;
-    }
-    /* ghirlanda sopra (decorazione leggera ma visibile) */
-    .garland {
-      position: absolute;
-      top: -6px;
-      left: 0;
-      right: 0;
-      height: 48px;
-      background:
-        radial-gradient(circle at 8% 60%, #2b7a2b 6px, transparent 7px),
-        radial-gradient(circle at 18% 54%, #225e1f 6px, transparent 7px),
-        radial-gradient(circle at 28% 62%, #2b7a2b 6px, transparent 7px),
-        radial-gradient(circle at 38% 56%, #2b7a2b 6px, transparent 7px),
-        radial-gradient(circle at 48% 60%, #225e1f 6px, transparent 7px),
-        radial-gradient(circle at 58% 54%, #2b7a2b 6px, transparent 7px),
-        radial-gradient(circle at 68% 62%, #225e1f 6px, transparent 7px),
-        radial-gradient(circle at 78% 56%, #2b7a2b 6px, transparent 7px),
-        radial-gradient(circle at 88% 60%, #225e1f 6px, transparent 7px);
-      opacity: 0.95;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.08));
-    }
-    /* lucine - piccoli cerchi colorati */
-    .garland::after{
-      content:"";
-      position:absolute;
-      left:0; right:0; top:10px; height:1px;
-      background-image:
-        radial-gradient(#ffec4d 4px, transparent 5px),
-        radial-gradient(#ff6b6b 4px, transparent 5px),
-        radial-gradient(#7cf5a6 4px, transparent 5px),
-        radial-gradient(#7ec8ff 4px, transparent 5px);
-      background-size: 180px 1px;
-      background-repeat: repeat-x;
-      opacity: 0.95;
-      mix-blend-mode: normal;
-    }
-    /* piccolo albero a destra */
-    .small-tree {
-      position: absolute;
-      right: 12px;
-      bottom: -10px;
-      width: 70px;
-      height: 90px;
-      z-index:3;
-      transform: translateY(0);
-      opacity: 0.95;
-    }
-    .small-tree svg { width:100%; height:100%; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.12)); }
-
-    /* ----------------- CONTENUTO ----------------- */
+    /* ====== CONTENUTO ====== */
     .container {
       flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 20px;
-      padding-top: 180px;    /* spazio per header */
-      padding-bottom: 100px; /* spazio per footer */
+      margin-top: var(--header-height);
+      margin-bottom: var(--footer-height);
+      overflow-y: hidden; /* Niente scroll manuale */
     }
     #courses {
-      background-color: transparent;
-      padding: 0;
       width: 100%;
-      max-width: 1600px;
+      max-width: 1700px;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: center;
-      gap: 40px; /* spazio tra box */
+      gap: 25px; /* Spazio tra i box */
     }
 
-    /* ----------------- CORSI (3 colonne) ----------------- */
+    /* ====== CORSI ====== */
     .course {
       display: flex;
-      border: 1px solid #ddd;
-      border-radius: 8px;
+      border-radius: 12px;
       overflow: hidden;
-      margin: 0;
-      background-color: #eeeeee;
+      background-color: #fff;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
       width: 100%;
-      align-items:center;
+      position: relative;
+      transition: all 0.3s ease;
     }
     .course > div {
-      padding: 18px 22px;
+      padding: 20px 25px;
       display: flex;
       align-items: center;
-      justify-content: center;
     }
     .course .attivita {
       flex: 2;
-      justify-content: flex-start;
-      font-size: 60px;
+      font-size: 55px;
       font-weight: 700;
-      color: var(--accent);
+      color: var(--primary-color);
     }
-    .course .ingresso, .course .inizio {
-      flex: 1;
+    .course .dettagli {
+      flex: 1.2;
+      display: flex;
+      justify-content: space-around;
+      background-color: rgba(0,0,0,0.03);
+      border-left: 1px solid rgba(0,0,0,0.05);
+    }
+    .info-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .info-label { font-size: 20px; text-transform: uppercase; color: #666; font-weight: 600; margin-bottom: 5px; }
+    .info-time { font-size: 55px; font-weight: 700; color: #000; line-height: 1; }
+
+    /* Colori stato */
+    .green  { background-color: #d1e7dd; border-left: 15px solid #198754; }
+    .yellow { background-color: #fff3cd; border-left: 15px solid #ffc107; }
+    .gray   { background-color: #f8f9fa; border-left: 15px solid #6c757d; color: #6c757d; }
+    
+    /* Animazione per corsi in arrivo (Giallo) */
+    .yellow { animation: pulse-border 2s infinite; }
+    @keyframes pulse-border {
+      0% { border-left-color: #ffc107; }
+      50% { border-left-color: #ffdb72; }
+      100% { border-left-color: #ffc107; }
+    }
+
+    /* Messaggio vuoto */
+    .empty-message {
       text-align: center;
-      border-left: 2px solid rgba(0,0,0,0.1);
-      font-size: 60px;
-      font-weight: 400;
-      white-space: nowrap;
-    }
-    .course .orario {
-      font-size: 60px;
-      font-weight: 700;
-      margin-left: 6px;
+      font-size: 50px;
+      font-weight: 500;
+      color: var(--primary-color);
+      background: white;
+      padding: 60px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }
 
-    .green  { background-color: #d4edda; }
-    .yellow { background-color: #fff3cd; }
-    .gray   { background-color: #eeeeee; }
-
-    /* ----------------- FOOTER / TICKER ----------------- */
+    /* ====== FOOTER TICKER ====== */
     footer {
-      background: #ffffff;
-      box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
-      height: 80px;
+      background: #003366; /* Blu scuro per stacco visivo */
+      color: white;
+      height: var(--footer-height);
       overflow: hidden;
       display: flex;
       align-items: center;
@@ -183,166 +142,124 @@
       bottom: 0; left: 0; right: 0;
       z-index: 1000;
     }
-    .ticker { width:100%; height:100%; overflow:hidden; position:relative; white-space:nowrap; }
-    .ticker__track { display:inline-block; white-space:nowrap; will-change:transform; animation: ticker var(--ticker-duration,30s) linear infinite; }
-    .ticker__content { display:inline-block; padding-right:60px; font-size:50px; font-weight:500; color: #003366; line-height:1.3; transform:translateY(8px); }
-
-    @keyframes ticker { 0%{ transform:translateX(0); } 100%{ transform:translateX(-50%); } }
-
-    /* ----------------- NEVE (no immagini esterne) ----------------- */
-    .snow {
-      position: fixed;
-      top: -12px;
-      width: 8px;
-      height: 8px;
-      background: white;
-      border-radius: 50%;
-      pointer-events: none;
-      animation: fall linear forwards;
-      z-index: 9999;
-      box-shadow: 0 0 6px rgba(255,255,255,0.8);
-      opacity: 0.9;
+    .ticker {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
     }
-    @keyframes fall { to { transform: translateY(120vh); } }
-
-    /* ----------------- MESSAGGIO FINALE ----------------- */
-    .no-courses-msg {
-      width:100%;
-      text-align:center;
-      font-size:60px;
-      font-weight:500;
-      color:#003366;
-      padding:40px 0;
+    .ticker__track {
+      display: inline-block;
+      white-space: nowrap;
+      will-change: transform;
+      animation: ticker var(--ticker-duration, 30s) linear infinite;
     }
-
-    /* responsive minima */
-    @media (max-width:900px){
-      .datetime .time { font-size:48px; }
-      .datetime .date { font-size:22px; }
-      .course .attivita, .course .ingresso, .course .inizio, .course .orario { font-size: 28px; }
-      .ticker__content { font-size: 24px; transform:translateY(6px); }
+    .ticker__content {
+      display: inline-block;
+      padding-right: 100px; /* Spazio extra tra le ripetizioni */
+      font-size: 40px;
+      font-weight: 500;
+      line-height: var(--footer-height);
+    }
+    @keyframes ticker {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
     }
   </style>
 </head>
 <body>
-  <!-- HEADER -->
+
   <header>
-    <img src="CF Lampugnano blu xl.png" alt="Logo Piscina" />
+    <img src="CF Lampugnano blu xl.png" alt="Logo Piscina" onerror="this.style.display='none'; document.write('<h2>Piscina Lampugnano</h2>')"/>
     <div class="datetime">
       <div class="time" id="clock">--:--</div>
-      <div class="date" id="date">--, --/--/----</div>
-    </div>
-
-    <!-- decorazioni natalizie invisibili all'interazione -->
-    <div class="xmas-deco" aria-hidden="true">
-      <div class="garland" aria-hidden="true"></div>
-      <div class="small-tree" aria-hidden="true">
-        <!-- piccolo albero SVG -->
-        <svg viewBox="0 0 120 160" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-          <g>
-            <polygon points="60,6 20,70 100,70" fill="#1b7a1b"/>
-            <polygon points="60,36 28,96 92,96" fill="#1f8f29"/>
-            <polygon points="60,66 36,120 84,120" fill="#2aa137"/>
-            <rect x="52" y="120" width="16" height="26" fill="#8b5a2b"/>
-            <circle cx="60" cy="50" r="4" fill="#ffd700"/>
-            <circle cx="45" cy="85" r="4" fill="#ff4d4d"/>
-            <circle cx="75" cy="85" r="4" fill="#ff4d4d"/>
-          </g>
-        </svg>
-      </div>
+      <div class="date" id="date">--</div>
     </div>
   </header>
 
-  <!-- CONTENUTO PRINCIPALE -->
   <div class="container">
-    <div id="courses">Caricamento corsi...</div>
+    <div id="courses">
+        <div class="empty-message">Caricamento corsi in corso...</div>
+    </div>
   </div>
 
-  <!-- FOOTER TICKER -->
   <footer>
     <div class="ticker" id="ticker">
       <div class="ticker__track" id="ticker-track">
-        <span class="ticker__content" id="ticker-copy-1">Caricamento note...</span>
-        <span class="ticker__content" id="ticker-copy-2">Caricamento note...</span>
+        <span class="ticker__content" id="ticker-copy-1">...</span>
+        <span class="ticker__content" id="ticker-copy-2">...</span>
       </div>
     </div>
   </footer>
 
-  <!-- ================= SCRIPT ================= -->
   <script>
-    /* ====== OROLOGIO E DATA ====== */
-    function updateClock(){
-      const now=new Date();
-      const h=now.getHours().toString().padStart(2,'0');
-      const m=now.getMinutes().toString().padStart(2,'0');
-      const d=now.getDate().toString().padStart(2,'0');
-      const month=(now.getMonth()+1).toString().padStart(2,'0');
-      const year=now.getFullYear();
-      const weekday=now.toLocaleDateString('it-IT',{weekday:'long'});
-      document.getElementById('clock').textContent = `${h}:${m}`;
-      document.getElementById('date').textContent  = `${weekday}, ${d}/${month}/${year}`;
+    /* ====== OROLOGIO ====== */
+    function updateClock() {
+      const now = new Date();
+      const h = now.getHours().toString().padStart(2, '0');
+      const m = now.getMinutes().toString().padStart(2, '0');
+      
+      const options = { weekday: 'long', year: 'numeric', month: '2-digit', day: '2-digit' };
+      // Forza locale italiano
+      const dateStr = now.toLocaleDateString('it-IT', options); 
+      
+      document.getElementById("clock").textContent = `${h}:${m}`;
+      document.getElementById("date").textContent  = dateStr;
     }
-    setInterval(updateClock,1000);
+    setInterval(updateClock, 1000);
     updateClock();
-  </script>
 
-  <script>
-    /* ====== NEVE: crea piccoli elementi DOM (no immagini esterne) ====== */
-    function createSnow(){
-      const s = document.createElement('div');
-      s.className = 'snow';
-      s.style.left = Math.random()*100 + 'vw';
-      s.style.width = (6 + Math.random()*8) + 'px';
-      s.style.height = s.style.width;
-      s.style.opacity = (0.5 + Math.random()*0.9).toString();
-      s.style.animationDuration = (4 + Math.random()*6) + 's';
-      document.body.appendChild(s);
-      setTimeout(()=> s.remove(), 12000);
-    }
-    // start a ritmo regolare ma leggero
-    const snowInterval = setInterval(createSnow, 160);
-  </script>
-
-  <script>
     /* ====== UTILS ====== */
-    function parseTime(t){
-      if(!t || typeof t!=='string' || !t.includes(':')) return NaN;
-      const [h,m]=t.split(':').map(Number);
-      return h*60 + m;
+    // Rimuove accenti per confronto giorni (lunedì == lunedi)
+    function normalizeStr(str) {
+      if (!str) return "";
+      return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
     }
-    function formatCell(cell){
-      if(!cell) return '';
-      if(cell.f) return cell.f;
-      if(typeof cell.v === 'string') return cell.v;
-      if(typeof cell.v === 'number') return cell.v.toString();
-      return '';
+
+    function parseTime(t) {
+      if (!t || typeof t !== 'string' || !t.includes(':')) return NaN;
+      const [h, m] = t.split(":").map(Number);
+      return (h * 60) + m;
     }
-  </script>
 
-  <script>
-    /* ====== CARICAMENTO CORSI + NOTE (Google Sheets GVIZ) ====== */
-    async function loadAll(){
-      const SHEET_BASE = 'https://docs.google.com/spreadsheets/d/1dcs1X7x84g69f14m9Sl2KmqZUbCI6lLBBfi3QCMNqWI/gviz/tq?tqx=out:json&sheet=';
-      const COURSES_URL = SHEET_BASE + 'Corsi';
-      const NOTES_URL   = SHEET_BASE + 'Note';
+    function formatCell(cell) {
+      if (!cell) return "";
+      if (cell.f) return cell.f;
+      if (typeof cell.v === 'string') return cell.v;
+      if (typeof cell.v === 'number') return cell.v.toString();
+      return "";
+    }
 
-      try{
-        // ---------- CORSI ----------
-        const resC = await fetch(COURSES_URL);
+    /* ====== CARICAMENTO DATI ====== */
+    // Variabile globale per evitare flash se i dati non cambiano
+    let lastCoursesHash = ""; 
+
+    async function loadAll() {
+      const SHEET_ID = '1dcs1X7x84g69f14m9Sl2KmqZUbCI6lLBBfi3QCMNqWI';
+      const SHEET_BASE = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=`;
+      
+      try {
+        /* ---- FETCH CORSI ---- */
+        const resC = await fetch(SHEET_BASE + 'Corsi');
+        if (!resC.ok) throw new Error("Network response was not ok");
         const txtC = await resC.text();
-        const jsonC = JSON.parse(txtC.substring(47).slice(0,-2));
-        const rowsC = jsonC.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ''));
+        const jsonC = JSON.parse(txtC.substring(47).slice(0, -2));
+        const rowsC = jsonC.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ""));
 
         const now = new Date();
-        const currentTime = now.getHours()*60 + now.getMinutes();
-        const day = now.toLocaleDateString('it-IT',{weekday:'long'}).toLowerCase();
+        const currentTime = now.getHours() * 60 + now.getMinutes();
+        const todayName = normalizeStr(now.toLocaleDateString('it-IT', { weekday: 'long' }));
 
+        // Filtra e Mappa
         let parsed = rowsC
-          .filter(r => (r[0]||'').toLowerCase() === day)
+          .filter(r => normalizeStr(r[0]) === todayName) // Usa normalizeStr per sicurezza
           .map(r => {
             const ingressoMin = parseTime(r[2]);
-            const inizioMin = parseTime(r[3]);
-            const durata = Number.parseInt(r[4]) || 60;
+            const inizioMin   = parseTime(r[3]);
+            const durata      = Number.parseInt(r[4]) || 60;
             return {
               attivita: r[1] || '',
               oraIngresso: r[2] || '',
@@ -352,72 +269,108 @@
               inizioMin
             };
           })
-          // rimuove i corsi già finiti (ingresso + durata)
-          .filter(c => Number.isFinite(c.ingressoMin) && currentTime <= (c.ingressoMin + c.durata))
-          .sort((a,b)=>a.ingressoMin - b.ingressoMin);
+          .filter(c => Number.isFinite(c.ingressoMin) && currentTime <= (c.ingressoMin + c.durata)) // Mostra finché non finisce
+          .sort((a, b) => a.ingressoMin - b.ingressoMin);
 
-        const coursesBox = document.getElementById('courses');
-        coursesBox.innerHTML = '';
+        renderCourses(parsed, currentTime);
 
-        if(parsed.length === 0){
-          coursesBox.innerHTML = `<div class="no-courses-msg">🏊‍♂️ Le attività di oggi sono terminate.<br>Ti aspettiamo domani!</div>`;
-        } else {
-          const visible = parsed.slice(0,5); // mostra massimo 5
-          visible.forEach(corso=>{
-            const timeToStart = corso.ingressoMin - currentTime;
-            let state = 'gray';
-            if(timeToStart <= 0 && timeToStart > -corso.durata) state = 'green';
-            else if(timeToStart <= 5 && timeToStart > 0) state = 'yellow';
-
-            const div = document.createElement('div');
-            div.className = `course ${state}`;
-            div.innerHTML = `
-              <div class="attivita">${corso.attivita}</div>
-              <div class="ingresso">Ingresso <span class="orario">${corso.oraIngresso}</span></div>
-              <div class="inizio">Inizio <span class="orario">${corso.oraInizio}</span></div>
-            `;
-            coursesBox.appendChild(div);
-          });
-        }
-
-        // ---------- NOTE (ticker) ----------
-        const resN = await fetch(NOTES_URL);
+        /* ---- FETCH NOTE (TICKER) ---- */
+        const resN = await fetch(SHEET_BASE + 'Note');
         const txtN = await resN.text();
-        const jsonN = JSON.parse(txtN.substring(47).slice(0,-2));
-        const rowsN = jsonN.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ''));
+        const jsonN = JSON.parse(txtN.substring(47).slice(0, -2));
+        const rowsN = jsonN.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ""));
 
         const notesText = rowsN
           .filter(r => r[0] && r[0].trim() !== '')
           .map(r => r[0])
-          .join('  •  ') || '—';
+          .join("  •  ");
 
-        const copy1 = document.getElementById('ticker-copy-1');
-        const copy2 = document.getElementById('ticker-copy-2');
-        copy1.textContent = notesText;
-        copy2.textContent = notesText;
+        updateTicker(notesText || 'Benvenuti alla Piscina Lampugnano');
 
-        // calcolo dinamico durata ticker (velocità costante)
-        requestAnimationFrame(()=> {
-          const contentWidth = copy1.offsetWidth;
-          const containerWidth = document.getElementById('ticker').offsetWidth;
-          const PIXELS_PER_SECOND = 120; // regola velocità (più alto = più veloce)
-          const distance = Math.max(contentWidth, containerWidth);
-          const durationSec = Math.max(12, distance / PIXELS_PER_SECOND);
-          const track = document.getElementById('ticker-track');
-          track.style.setProperty('--ticker-duration', `${durationSec}s`);
-        });
-
-      } catch(err){
-        console.error('Errore nel caricamento:', err);
-        document.getElementById('courses').textContent = '⚠️ Impossibile caricare i corsi.';
-        document.getElementById('ticker-copy-1').textContent = '⚠️ Impossibile caricare le note.';
-        document.getElementById('ticker-copy-2').textContent = '⚠️ Impossibile caricare le note.';
+      } catch (err) {
+        console.error('Errore update:', err);
+        // Non mostrare errore a video se c'è già contenuto caricato, tieni il vecchio.
+        // Se è vuoto, mostra errore.
+        const box = document.getElementById('courses');
+        if (!box.children.length || box.innerText.includes('Caricamento')) {
+           box.innerHTML = `<div class="empty-message">⚠️ Riconnessione in corso...</div>`;
+        }
       }
     }
 
-    // primo load + intervalli
+    function renderCourses(courses, currentTime) {
+        const coursesBox = document.getElementById('courses');
+        
+        // Creiamo l'HTML in una variabile temp
+        let htmlContent = '';
+
+        if (courses.length === 0) {
+           htmlContent = `
+            <div class="empty-message">
+              🏊‍♂️ Le attività di oggi sono terminate.<br>
+              <span style="font-size:30px; color:#666">Vi aspettiamo domani!</span>
+            </div>`;
+        } else {
+          const visible = courses.slice(0, 5); // Max 5 righe per non uscire dallo schermo
+          
+          visible.forEach(corso => {
+            const timeToStart = corso.ingressoMin - currentTime;
+            
+            // Logica stati
+            let style = 'gray'; // Default: Futuro
+            if (timeToStart <= 0 && timeToStart > -corso.durata) {
+                style = 'green'; // In corso
+            } else if (timeToStart <= 15 && timeToStart > 0) {
+                style = 'yellow'; // Inizio tra 15 min
+            }
+
+            htmlContent += `
+              <div class="course ${style}">
+                <div class="attivita">${corso.attivita}</div>
+                <div class="dettagli">
+                    <div class="info-box">
+                        <span class="info-label">Ingresso</span>
+                        <span class="info-time">${corso.oraIngresso}</span>
+                    </div>
+                    <div class="info-box">
+                        <span class="info-label">Inizio</span>
+                        <span class="info-time">${corso.oraInizio}</span>
+                    </div>
+                </div>
+              </div>
+            `;
+          });
+        }
+
+        // Aggiorna il DOM solo se è cambiato qualcosa (o se vuoi forzare refresh)
+        // Qui sostituiamo brutalmente, ma essendo testo semplice è molto veloce.
+        coursesBox.innerHTML = htmlContent;
+    }
+
+    function updateTicker(text) {
+        const copy1 = document.getElementById('ticker-copy-1');
+        const copy2 = document.getElementById('ticker-copy-2');
+        const track = document.getElementById('ticker-track');
+        
+        // Se il testo è lo stesso, non ricalcolare animazione (evita scatti)
+        if (copy1.textContent === text) return;
+
+        copy1.textContent = text;
+        copy2.textContent = text;
+
+        // Calcolo velocità basata sulla lunghezza del testo
+        // Più lungo è il testo, più tempo serve
+        requestAnimationFrame(() => {
+            const width = copy1.offsetWidth;
+            const duration = Math.max(20, width / 100); // Circa 100px al secondo
+            track.style.setProperty('--ticker-duration', `${duration}s`);
+        });
+    }
+
+    // Avvio
     loadAll();
-    setInterval(loadAll, 60000); // aggiorna ogni minuto
+    // Aggiorna ogni 30 secondi per essere più reattivo
+    setInterval(loadAll, 30000); 
   </script>
 </body>
 </html>
