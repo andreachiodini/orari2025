@@ -2,27 +2,52 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <title>Orari Piscina Lampugnano</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <title>Orari Piscina - Edizione Natalizia</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --primary-color: #003366;
-      --bg-color: #f0f8ff;
-      --header-height: 140px;
+      --xmas-red: #b3000c;       /* Rosso Natale scuro */
+      --xmas-green: #0f5132;     /* Verde Abete */
+      --xmas-gold: #ffd700;      /* Oro */
+      --xmas-bg: #f4f9ff;        /* Bianco Ghiaccio sfumato */
+      --header-height: 150px;
       --footer-height: 80px;
     }
 
     body {
-      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      font-family: "Inter", sans-serif;
       margin: 0;
-      background-color: var(--bg-color);
-      color: var(--primary-color);
-      letter-spacing: -0.5px;
+      /* Sfondo sfumato leggero */
+      background: radial-gradient(circle at center, #ffffff 0%, #e6eef5 100%);
+      color: #333;
       display: flex;
       flex-direction: column;
       height: 100vh;
-      overflow: hidden; /* Evita scrollbar indesiderate su monitor TV */
+      overflow: hidden;
+    }
+
+    /* ====== EFFETTO NEVE ====== */
+    #snow-container {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; /* La neve non cliccabile */
+      z-index: 9999;
+      overflow: hidden;
+    }
+    .snowflake {
+      position: absolute;
+      top: -10px;
+      color: #add8e6; /* Celeste chiaro */
+      font-size: 1em;
+      opacity: 0.8;
+      animation: fall linear infinite;
+    }
+    @keyframes fall {
+      0% { transform: translateY(-10vh) translateX(0); opacity: 1; }
+      100% { transform: translateY(110vh) translateX(20px); opacity: 0.3; }
     }
 
     /* ====== HEADER ====== */
@@ -32,20 +57,34 @@
       align-items: center;
       background-color: #ffffff;
       padding: 0 30px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      /* Bordo decorativo rosso e verde */
+      border-bottom: 8px solid var(--xmas-red);
+      box-shadow: 0 4px 15px rgba(179, 0, 12, 0.2);
       height: var(--header-height);
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 1000;
     }
     header img {
-      height: 70%; /* Adatta l'immagine all'altezza header */
+      height: 70%;
       width: auto;
       object-fit: contain;
     }
-    .datetime { text-align: right; line-height: 1.1; }
-    .datetime .time { font-weight: 700; font-size: 75px; letter-spacing: -2px; }
-    .datetime .date { font-weight: 500; font-size: 38px; color: #004080; text-transform: capitalize; }
+    
+    /* Decorazione Agrifoglio vicino all'orologio */
+    .holly-icon {
+        font-size: 50px;
+        margin-right: 15px;
+        vertical-align: middle;
+    }
+
+    .datetime { 
+        text-align: right; 
+        color: var(--xmas-red);
+        font-family: 'Mountains of Christmas', cursive; /* Font Natalizio */
+    }
+    .datetime .time { font-weight: 700; font-size: 85px; line-height: 0.9; }
+    .datetime .date { font-weight: 700; font-size: 40px; color: var(--xmas-green); }
 
     /* ====== CONTENUTO ====== */
     .container {
@@ -56,7 +95,6 @@
       padding: 20px;
       margin-top: var(--header-height);
       margin-bottom: var(--footer-height);
-      overflow-y: hidden; /* Niente scroll manuale */
     }
     #courses {
       width: 100%;
@@ -64,75 +102,105 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      gap: 25px; /* Spazio tra i box */
+      gap: 25px;
+      z-index: 1; /* Sopra lo sfondo */
     }
 
-    /* ====== CORSI ====== */
+    /* ====== CORSI CARD ====== */
     .course {
       display: flex;
-      border-radius: 12px;
+      border-radius: 15px;
       overflow: hidden;
       background-color: #fff;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      box-shadow: 0 8px 15px rgba(0,0,0,0.1);
       width: 100%;
       position: relative;
-      transition: all 0.3s ease;
+      border: 1px solid #e0e0e0;
     }
+    
     .course > div {
       padding: 20px 25px;
       display: flex;
       align-items: center;
     }
+
+    /* Stile testo attività */
     .course .attivita {
       flex: 2;
       font-size: 55px;
       font-weight: 700;
-      color: var(--primary-color);
+      color: #003366; /* Manteniamo blu per leggibilità o grigio scuro */
     }
+
     .course .dettagli {
       flex: 1.2;
       display: flex;
       justify-content: space-around;
-      background-color: rgba(0,0,0,0.03);
-      border-left: 1px solid rgba(0,0,0,0.05);
+      background-color: rgba(0,0,0,0.02);
+      border-left: 2px dashed #ddd; /* Tratteggio stile biglietto */
     }
+    
     .info-box {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
     }
-    .info-label { font-size: 20px; text-transform: uppercase; color: #666; font-weight: 600; margin-bottom: 5px; }
-    .info-time { font-size: 55px; font-weight: 700; color: #000; line-height: 1; }
+    .info-label { 
+        font-size: 18px; 
+        text-transform: uppercase; 
+        color: var(--xmas-red); /* Etichette rosse */
+        font-weight: 700; 
+        margin-bottom: 5px; 
+        letter-spacing: 1px;
+    }
+    .info-time { font-size: 55px; font-weight: 700; color: #333; line-height: 1; }
 
-    /* Colori stato */
-    .green  { background-color: #d1e7dd; border-left: 15px solid #198754; }
-    .yellow { background-color: #fff3cd; border-left: 15px solid #ffc107; }
-    .gray   { background-color: #f8f9fa; border-left: 15px solid #6c757d; color: #6c757d; }
+    /* --- STATI CORSI NATALIZI --- */
     
-    /* Animazione per corsi in arrivo (Giallo) */
-    .yellow { animation: pulse-border 2s infinite; }
-    @keyframes pulse-border {
-      0% { border-left-color: #ffc107; }
-      50% { border-left-color: #ffdb72; }
-      100% { border-left-color: #ffc107; }
+    /* IN CORSO (Verde Natale) */
+    .green  { 
+        background-color: #e8f5e9; 
+        border-left: 15px solid var(--xmas-green); 
+    }
+    .green .attivita { color: var(--xmas-green); }
+
+    /* IN ARRIVO (Oro/Giallo) */
+    .yellow { 
+        background-color: #fffde7; 
+        border-left: 15px solid var(--xmas-gold);
+        animation: glow 2s infinite alternate;
+    }
+    @keyframes glow {
+        from { box-shadow: 0 0 5px var(--xmas-gold); }
+        to   { box-shadow: 0 0 20px var(--xmas-gold); }
+    }
+
+    /* FUTURO (Ghiaccio/Grigio) */
+    .gray   { 
+        background-color: #f8f9fa; 
+        border-left: 15px solid #cfd8dc; 
+        color: #888; 
     }
 
     /* Messaggio vuoto */
     .empty-message {
       text-align: center;
-      font-size: 50px;
-      font-weight: 500;
-      color: var(--primary-color);
-      background: white;
+      font-size: 45px;
+      font-family: 'Mountains of Christmas', cursive;
+      font-weight: 700;
+      color: var(--xmas-red);
+      background: rgba(255,255,255,0.9);
       padding: 60px;
       border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      border: 2px solid var(--xmas-gold);
+      box-shadow: 0 10px 30px rgba(179, 0, 12, 0.1);
     }
 
     /* ====== FOOTER TICKER ====== */
     footer {
-      background: #003366; /* Blu scuro per stacco visivo */
+      background: var(--xmas-red); /* Fondo Rosso */
+      border-top: 4px solid var(--xmas-gold); /* Linea Oro */
       color: white;
       height: var(--footer-height);
       overflow: hidden;
@@ -142,47 +210,50 @@
       bottom: 0; left: 0; right: 0;
       z-index: 1000;
     }
-    .ticker {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      position: relative;
-      white-space: nowrap;
-      display: flex;
-      align-items: center;
+    .ticker__content {
+      display: inline-block;
+      padding-right: 100px;
+      font-size: 38px;
+      font-weight: 600;
+      line-height: var(--footer-height);
+      font-family: 'Inter', sans-serif; /* Leggibilità per le note */
     }
+    .ticker__content::before {
+        content: "🎄 "; /* Alberello prima di ogni nota */
+    }
+
+    /* Animazione Ticker */
     .ticker__track {
       display: inline-block;
       white-space: nowrap;
       will-change: transform;
       animation: ticker var(--ticker-duration, 30s) linear infinite;
     }
-    .ticker__content {
-      display: inline-block;
-      padding-right: 100px; /* Spazio extra tra le ripetizioni */
-      font-size: 40px;
-      font-weight: 500;
-      line-height: var(--footer-height);
-    }
     @keyframes ticker {
       0%   { transform: translateX(0); }
       100% { transform: translateX(-50%); }
     }
+
   </style>
 </head>
 <body>
 
+  <div id="snow-container"></div>
+
   <header>
-    <img src="CF Lampugnano blu xl.png" alt="Logo Piscina" onerror="this.style.display='none'; document.write('<h2>Piscina Lampugnano</h2>')"/>
-    <div class="datetime">
-      <div class="time" id="clock">--:--</div>
-      <div class="date" id="date">--</div>
+    <img src="CF Lampugnano blu xl.png" alt="Logo Piscina" onerror="this.style.display='none'; document.write('<h2 style=\'color:#b3000c\'>Piscina Lampugnano</h2>')"/>
+    
+    <div style="display:flex; align-items:center;">
+        <span class="holly-icon">🎅</span> <div class="datetime">
+        <div class="time" id="clock">--:--</div>
+        <div class="date" id="date">--</div>
+        </div>
     </div>
   </header>
 
   <div class="container">
     <div id="courses">
-        <div class="empty-message">Caricamento corsi in corso...</div>
+        <div class="empty-message">🎁 Caricamento orari delle feste...</div>
     </div>
   </div>
 
@@ -196,14 +267,32 @@
   </footer>
 
   <script>
+    /* ====== GENERATORE NEVE ====== */
+    function createSnow() {
+        const container = document.getElementById('snow-container');
+        const snowflakeCount = 30; // Numero fiocchi
+        const chars = ['❄', '❅', '❆', '•']; // Tipi di fiocchi
+
+        for (let i = 0; i < snowflakeCount; i++) {
+            const el = document.createElement('div');
+            el.className = 'snowflake';
+            el.textContent = chars[Math.floor(Math.random() * chars.length)];
+            el.style.left = Math.random() * 100 + 'vw';
+            el.style.animationDuration = (Math.random() * 3 + 5) + 's'; // Tra 5 e 8 secondi
+            el.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            el.style.animationDelay = Math.random() * 5 + 's';
+            container.appendChild(el);
+        }
+    }
+    createSnow();
+
     /* ====== OROLOGIO ====== */
     function updateClock() {
       const now = new Date();
       const h = now.getHours().toString().padStart(2, '0');
       const m = now.getMinutes().toString().padStart(2, '0');
       
-      const options = { weekday: 'long', year: 'numeric', month: '2-digit', day: '2-digit' };
-      // Forza locale italiano
+      const options = { weekday: 'long', day: 'numeric', month: 'long' }; // Es: Lunedì, 25 Dicembre
       const dateStr = now.toLocaleDateString('it-IT', options); 
       
       document.getElementById("clock").textContent = `${h}:${m}`;
@@ -213,7 +302,6 @@
     updateClock();
 
     /* ====== UTILS ====== */
-    // Rimuove accenti per confronto giorni (lunedì == lunedi)
     function normalizeStr(str) {
       if (!str) return "";
       return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
@@ -234,9 +322,6 @@
     }
 
     /* ====== CARICAMENTO DATI ====== */
-    // Variabile globale per evitare flash se i dati non cambiano
-    let lastCoursesHash = ""; 
-
     async function loadAll() {
       const SHEET_ID = '1dcs1X7x84g69f14m9Sl2KmqZUbCI6lLBBfi3QCMNqWI';
       const SHEET_BASE = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=`;
@@ -244,7 +329,7 @@
       try {
         /* ---- FETCH CORSI ---- */
         const resC = await fetch(SHEET_BASE + 'Corsi');
-        if (!resC.ok) throw new Error("Network response was not ok");
+        if (!resC.ok) throw new Error("Errore rete");
         const txtC = await resC.text();
         const jsonC = JSON.parse(txtC.substring(47).slice(0, -2));
         const rowsC = jsonC.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ""));
@@ -253,9 +338,8 @@
         const currentTime = now.getHours() * 60 + now.getMinutes();
         const todayName = normalizeStr(now.toLocaleDateString('it-IT', { weekday: 'long' }));
 
-        // Filtra e Mappa
         let parsed = rowsC
-          .filter(r => normalizeStr(r[0]) === todayName) // Usa normalizeStr per sicurezza
+          .filter(r => normalizeStr(r[0]) === todayName)
           .map(r => {
             const ingressoMin = parseTime(r[2]);
             const inizioMin   = parseTime(r[3]);
@@ -269,12 +353,12 @@
               inizioMin
             };
           })
-          .filter(c => Number.isFinite(c.ingressoMin) && currentTime <= (c.ingressoMin + c.durata)) // Mostra finché non finisce
+          .filter(c => Number.isFinite(c.ingressoMin) && currentTime <= (c.ingressoMin + c.durata))
           .sort((a, b) => a.ingressoMin - b.ingressoMin);
 
         renderCourses(parsed, currentTime);
 
-        /* ---- FETCH NOTE (TICKER) ---- */
+        /* ---- FETCH NOTE ---- */
         const resN = await fetch(SHEET_BASE + 'Note');
         const txtN = await resN.text();
         const jsonN = JSON.parse(txtN.substring(47).slice(0, -2));
@@ -285,43 +369,37 @@
           .map(r => r[0])
           .join("  •  ");
 
-        updateTicker(notesText || 'Benvenuti alla Piscina Lampugnano');
+        updateTicker(notesText || 'Buone Feste dalla Piscina Lampugnano! 🎄');
 
       } catch (err) {
         console.error('Errore update:', err);
-        // Non mostrare errore a video se c'è già contenuto caricato, tieni il vecchio.
-        // Se è vuoto, mostra errore.
         const box = document.getElementById('courses');
         if (!box.children.length || box.innerText.includes('Caricamento')) {
-           box.innerHTML = `<div class="empty-message">⚠️ Riconnessione in corso...</div>`;
+           box.innerHTML = `<div class="empty-message">❄️ Attesa connessione...</div>`;
         }
       }
     }
 
     function renderCourses(courses, currentTime) {
         const coursesBox = document.getElementById('courses');
-        
-        // Creiamo l'HTML in una variabile temp
         let htmlContent = '';
 
         if (courses.length === 0) {
            htmlContent = `
             <div class="empty-message">
-              🏊‍♂️ Le attività di oggi sono terminate.<br>
-              <span style="font-size:30px; color:#666">Vi aspettiamo domani!</span>
+              🦌 Le attività di oggi sono terminate.<br>
+              <span style="font-size:30px; color:#b3000c">Buone Feste e a domani!</span>
             </div>`;
         } else {
-          const visible = courses.slice(0, 5); // Max 5 righe per non uscire dallo schermo
-          
+          const visible = courses.slice(0, 5);
           visible.forEach(corso => {
             const timeToStart = corso.ingressoMin - currentTime;
             
-            // Logica stati
-            let style = 'gray'; // Default: Futuro
+            let style = 'gray'; 
             if (timeToStart <= 0 && timeToStart > -corso.durata) {
-                style = 'green'; // In corso
+                style = 'green';
             } else if (timeToStart <= 15 && timeToStart > 0) {
-                style = 'yellow'; // Inizio tra 15 min
+                style = 'yellow';
             }
 
             htmlContent += `
@@ -341,9 +419,6 @@
             `;
           });
         }
-
-        // Aggiorna il DOM solo se è cambiato qualcosa (o se vuoi forzare refresh)
-        // Qui sostituiamo brutalmente, ma essendo testo semplice è molto veloce.
         coursesBox.innerHTML = htmlContent;
     }
 
@@ -351,25 +426,17 @@
         const copy1 = document.getElementById('ticker-copy-1');
         const copy2 = document.getElementById('ticker-copy-2');
         const track = document.getElementById('ticker-track');
-        
-        // Se il testo è lo stesso, non ricalcolare animazione (evita scatti)
         if (copy1.textContent === text) return;
-
         copy1.textContent = text;
         copy2.textContent = text;
-
-        // Calcolo velocità basata sulla lunghezza del testo
-        // Più lungo è il testo, più tempo serve
         requestAnimationFrame(() => {
             const width = copy1.offsetWidth;
-            const duration = Math.max(20, width / 100); // Circa 100px al secondo
+            const duration = Math.max(20, width / 100); 
             track.style.setProperty('--ticker-duration', `${duration}s`);
         });
     }
 
-    // Avvio
     loadAll();
-    // Aggiorna ogni 30 secondi per essere più reattivo
     setInterval(loadAll, 30000); 
   </script>
 </body>
