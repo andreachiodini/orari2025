@@ -2,17 +2,24 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <title>Orari Piscina Lampugnano – Natale 🎄</title>
+  <title>Orari Piscina Lampugnano - Natale</title>
 
   <!-- Font Inter -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <style>
+    /* ----------------- BASE ----------------- */
+    :root{
+      --accent:#003366;
+      --accent-blue:#004080;
+      --bg:#f0f8ff;
+    }
+    html,body{height:100%;margin:0;}
     body {
       font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       margin: 0;
-      background: linear-gradient(#e6f2ff, #ffffff);
-      color: #003366;
+      background-color: var(--bg);
+      color: var(--accent);
       letter-spacing: -0.3px;
       display: flex;
       flex-direction: column;
@@ -20,159 +27,204 @@
       overflow-x: hidden;
     }
 
-    /* ❄️ NEVE */
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      pointer-events: none;
-      background-image: url('https://i.imgur.com/cCqhQZ4.png');
-      animation: snow 20s linear infinite;
-      opacity: 0.6;
-    }
-    @keyframes snow {
-      0% { background-position: 0 0; }
-      100% { background-position: 0 1000px; }
-    }
-
-    /* ====== HEADER NATALIZIO ====== */
+    /* ----------------- HEADER ----------------- */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: linear-gradient(90deg, #b30000, #cc0000, #b30000);
+      background-color: #ffffff;
       padding: 10px 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       height: 140px;
-      border-bottom: 4px solid gold;
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       z-index: 1000;
     }
     header img {
       height: 100%;
-      max-width: 260px;
+      width: auto;
+      max-width: 280px;
       object-fit: contain;
-      filter: drop-shadow(0 0 4px rgba(255,255,255,0.6));
+      z-index: 5;
     }
-    .datetime .time {
-      font-weight: 700;
-      font-size: 80px;
-      color: white;
-      text-shadow: 0 0 8px rgba(255,255,255,0.8);
-    }
-    .datetime .date {
-      font-weight: 500;
-      font-size: 50px;
-      color: #ffeecc;
-    }
+    .datetime { text-align: right; z-index:5; }
+    .datetime .time { font-weight: 700; font-size: 80px; color: var(--accent); }
+    .datetime .date { font-weight: 500; font-size: 50px; color: var(--accent-blue); }
 
-    /* ====== CONTAINER ====== */
+    /* ----------------- NATALIZIE (DECORAZIONI) ----------------- */
+    /* wrapper assoluto dentro l'header per decorazioni: pointer-events none */
+    .xmas-deco {
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+    }
+    /* ghirlanda sopra (decorazione leggera ma visibile) */
+    .garland {
+      position: absolute;
+      top: -6px;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background:
+        radial-gradient(circle at 8% 60%, #2b7a2b 6px, transparent 7px),
+        radial-gradient(circle at 18% 54%, #225e1f 6px, transparent 7px),
+        radial-gradient(circle at 28% 62%, #2b7a2b 6px, transparent 7px),
+        radial-gradient(circle at 38% 56%, #2b7a2b 6px, transparent 7px),
+        radial-gradient(circle at 48% 60%, #225e1f 6px, transparent 7px),
+        radial-gradient(circle at 58% 54%, #2b7a2b 6px, transparent 7px),
+        radial-gradient(circle at 68% 62%, #225e1f 6px, transparent 7px),
+        radial-gradient(circle at 78% 56%, #2b7a2b 6px, transparent 7px),
+        radial-gradient(circle at 88% 60%, #225e1f 6px, transparent 7px);
+      opacity: 0.95;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.08));
+    }
+    /* lucine - piccoli cerchi colorati */
+    .garland::after{
+      content:"";
+      position:absolute;
+      left:0; right:0; top:10px; height:1px;
+      background-image:
+        radial-gradient(#ffec4d 4px, transparent 5px),
+        radial-gradient(#ff6b6b 4px, transparent 5px),
+        radial-gradient(#7cf5a6 4px, transparent 5px),
+        radial-gradient(#7ec8ff 4px, transparent 5px);
+      background-size: 180px 1px;
+      background-repeat: repeat-x;
+      opacity: 0.95;
+      mix-blend-mode: normal;
+    }
+    /* piccolo albero a destra */
+    .small-tree {
+      position: absolute;
+      right: 12px;
+      bottom: -10px;
+      width: 70px;
+      height: 90px;
+      z-index:3;
+      transform: translateY(0);
+      opacity: 0.95;
+    }
+    .small-tree svg { width:100%; height:100%; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.12)); }
+
+    /* ----------------- CONTENUTO ----------------- */
     .container {
       flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 20px;
-      padding-top: 180px;
-      padding-bottom: 100px;
+      padding-top: 180px;    /* spazio per header */
+      padding-bottom: 100px; /* spazio per footer */
     }
     #courses {
+      background-color: transparent;
+      padding: 0;
       width: 100%;
       max-width: 1600px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: 40px;
+      gap: 40px; /* spazio tra box */
     }
 
-    /* ====== CORSI NATALIZI ====== */
+    /* ----------------- CORSI (3 colonne) ----------------- */
     .course {
       display: flex;
-      border-radius: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
       overflow: hidden;
+      margin: 0;
+      background-color: #eeeeee;
       width: 100%;
-      background: #fff;
-      border: 3px solid #b30000;
-      box-shadow: 0 0 12px rgba(255,0,0,0.25);
-      position: relative;
+      align-items:center;
     }
-
-    /* 🎁 Fiocco nell'angolo */
-    .course::after {
-      content: "🎁";
-      position: absolute;
-      top: -20px;
-      right: -10px;
-      font-size: 50px;
-      transform: rotate(10deg);
-    }
-
     .course > div {
-      padding: 20px 28px;
+      padding: 18px 22px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .attivita {
+    .course .attivita {
       flex: 2;
       justify-content: flex-start;
       font-size: 60px;
       font-weight: 700;
-      color: #b30000;
-      text-shadow: 0 0 4px rgba(255,255,255,0.7);
+      color: var(--accent);
     }
-    .ingresso, .inizio {
+    .course .ingresso, .course .inizio {
       flex: 1;
       text-align: center;
-      border-left: 2px dashed #ffcccc;
+      border-left: 2px solid rgba(0,0,0,0.1);
       font-size: 60px;
       font-weight: 400;
       white-space: nowrap;
     }
-    .orario {
+    .course .orario {
       font-size: 60px;
       font-weight: 700;
-      color: #008000;
+      margin-left: 6px;
     }
 
-    /* Stati */
-    .green  { background-color: #d6ffe0; }
-    .yellow { background-color: #fff8d1; }
-    .gray   { background-color: #f0f0f0; }
+    .green  { background-color: #d4edda; }
+    .yellow { background-color: #fff3cd; }
+    .gray   { background-color: #eeeeee; }
 
-    /* ====== FOOTER TICKER ROSSO ====== */
+    /* ----------------- FOOTER / TICKER ----------------- */
     footer {
-      background: linear-gradient(90deg, #b30000, #cc0000);
-      box-shadow: 0 -2px 6px rgba(0,0,0,0.3);
+      background: #ffffff;
+      box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
       height: 80px;
       overflow: hidden;
       display: flex;
       align-items: center;
       position: fixed;
       bottom: 0; left: 0; right: 0;
-      border-top: 4px solid gold;
       z-index: 1000;
     }
-    .ticker__content {
-      font-size: 50px;
-      font-weight: 600;
-      color: #fffbe6;
-      transform: translateY(8px);
+    .ticker { width:100%; height:100%; overflow:hidden; position:relative; white-space:nowrap; }
+    .ticker__track { display:inline-block; white-space:nowrap; will-change:transform; animation: ticker var(--ticker-duration,30s) linear infinite; }
+    .ticker__content { display:inline-block; padding-right:60px; font-size:50px; font-weight:500; color: #003366; line-height:1.3; transform:translateY(8px); }
+
+    @keyframes ticker { 0%{ transform:translateX(0); } 100%{ transform:translateX(-50%); } }
+
+    /* ----------------- NEVE (no immagini esterne) ----------------- */
+    .snow {
+      position: fixed;
+      top: -12px;
+      width: 8px;
+      height: 8px;
+      background: white;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: fall linear forwards;
+      z-index: 9999;
+      box-shadow: 0 0 6px rgba(255,255,255,0.8);
+      opacity: 0.9;
+    }
+    @keyframes fall { to { transform: translateY(120vh); } }
+
+    /* ----------------- MESSAGGIO FINALE ----------------- */
+    .no-courses-msg {
+      width:100%;
+      text-align:center;
+      font-size:60px;
+      font-weight:500;
+      color:#003366;
+      padding:40px 0;
     }
 
-    @keyframes ticker {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
+    /* responsive minima */
+    @media (max-width:900px){
+      .datetime .time { font-size:48px; }
+      .datetime .date { font-size:22px; }
+      .course .attivita, .course .ingresso, .course .inizio, .course .orario { font-size: 28px; }
+      .ticker__content { font-size: 24px; transform:translateY(6px); }
     }
-
   </style>
 </head>
 <body>
-
   <!-- HEADER -->
   <header>
     <img src="CF Lampugnano blu xl.png" alt="Logo Piscina" />
@@ -180,14 +232,33 @@
       <div class="time" id="clock">--:--</div>
       <div class="date" id="date">--, --/--/----</div>
     </div>
+
+    <!-- decorazioni natalizie invisibili all'interazione -->
+    <div class="xmas-deco" aria-hidden="true">
+      <div class="garland" aria-hidden="true"></div>
+      <div class="small-tree" aria-hidden="true">
+        <!-- piccolo albero SVG -->
+        <svg viewBox="0 0 120 160" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <g>
+            <polygon points="60,6 20,70 100,70" fill="#1b7a1b"/>
+            <polygon points="60,36 28,96 92,96" fill="#1f8f29"/>
+            <polygon points="60,66 36,120 84,120" fill="#2aa137"/>
+            <rect x="52" y="120" width="16" height="26" fill="#8b5a2b"/>
+            <circle cx="60" cy="50" r="4" fill="#ffd700"/>
+            <circle cx="45" cy="85" r="4" fill="#ff4d4d"/>
+            <circle cx="75" cy="85" r="4" fill="#ff4d4d"/>
+          </g>
+        </svg>
+      </div>
+    </div>
   </header>
 
-  <!-- CONTENUTO -->
+  <!-- CONTENUTO PRINCIPALE -->
   <div class="container">
     <div id="courses">Caricamento corsi...</div>
   </div>
 
-  <!-- FOOTER NATALIZIO -->
+  <!-- FOOTER TICKER -->
   <footer>
     <div class="ticker" id="ticker">
       <div class="ticker__track" id="ticker-track">
@@ -197,28 +268,156 @@
     </div>
   </footer>
 
-  <!-- SCRIPT ORIGINALI (non modificati) -->
+  <!-- ================= SCRIPT ================= -->
   <script>
-    function updateClock() {
-      const now = new Date();
-      const h = now.getHours().toString().padStart(2, '0');
-      const m = now.getMinutes().toString().padStart(2, '0');
-      const d = now.getDate().toString().padStart(2, '0');
-      const month = (now.getMonth() + 1).toString().padStart(2, '0');
-      const year = now.getFullYear();
-      const weekday = now.toLocaleDateString('it-IT', { weekday: 'long' });
-      document.getElementById("clock").textContent = `${h}:${m}`;
-      document.getElementById("date").textContent  = `${weekday}, ${d}/${month}/${year}`;
+    /* ====== OROLOGIO E DATA ====== */
+    function updateClock(){
+      const now=new Date();
+      const h=now.getHours().toString().padStart(2,'0');
+      const m=now.getMinutes().toString().padStart(2,'0');
+      const d=now.getDate().toString().padStart(2,'0');
+      const month=(now.getMonth()+1).toString().padStart(2,'0');
+      const year=now.getFullYear();
+      const weekday=now.toLocaleDateString('it-IT',{weekday:'long'});
+      document.getElementById('clock').textContent = `${h}:${m}`;
+      document.getElementById('date').textContent  = `${weekday}, ${d}/${month}/${year}`;
     }
-    setInterval(updateClock, 1000);
+    setInterval(updateClock,1000);
     updateClock();
   </script>
 
   <script>
-    /* Identico al tuo – NON modificato nella logica */
-    /* Caricamento corsi + note + ticker + filtri */
-    /* …copiato tale e quale dal tuo messaggio… */
+    /* ====== NEVE: crea piccoli elementi DOM (no immagini esterne) ====== */
+    function createSnow(){
+      const s = document.createElement('div');
+      s.className = 'snow';
+      s.style.left = Math.random()*100 + 'vw';
+      s.style.width = (6 + Math.random()*8) + 'px';
+      s.style.height = s.style.width;
+      s.style.opacity = (0.5 + Math.random()*0.9).toString();
+      s.style.animationDuration = (4 + Math.random()*6) + 's';
+      document.body.appendChild(s);
+      setTimeout(()=> s.remove(), 12000);
+    }
+    // start a ritmo regolare ma leggero
+    const snowInterval = setInterval(createSnow, 160);
   </script>
 
+  <script>
+    /* ====== UTILS ====== */
+    function parseTime(t){
+      if(!t || typeof t!=='string' || !t.includes(':')) return NaN;
+      const [h,m]=t.split(':').map(Number);
+      return h*60 + m;
+    }
+    function formatCell(cell){
+      if(!cell) return '';
+      if(cell.f) return cell.f;
+      if(typeof cell.v === 'string') return cell.v;
+      if(typeof cell.v === 'number') return cell.v.toString();
+      return '';
+    }
+  </script>
+
+  <script>
+    /* ====== CARICAMENTO CORSI + NOTE (Google Sheets GVIZ) ====== */
+    async function loadAll(){
+      const SHEET_BASE = 'https://docs.google.com/spreadsheets/d/1dcs1X7x84g69f14m9Sl2KmqZUbCI6lLBBfi3QCMNqWI/gviz/tq?tqx=out:json&sheet=';
+      const COURSES_URL = SHEET_BASE + 'Corsi';
+      const NOTES_URL   = SHEET_BASE + 'Note';
+
+      try{
+        // ---------- CORSI ----------
+        const resC = await fetch(COURSES_URL);
+        const txtC = await resC.text();
+        const jsonC = JSON.parse(txtC.substring(47).slice(0,-2));
+        const rowsC = jsonC.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ''));
+
+        const now = new Date();
+        const currentTime = now.getHours()*60 + now.getMinutes();
+        const day = now.toLocaleDateString('it-IT',{weekday:'long'}).toLowerCase();
+
+        let parsed = rowsC
+          .filter(r => (r[0]||'').toLowerCase() === day)
+          .map(r => {
+            const ingressoMin = parseTime(r[2]);
+            const inizioMin = parseTime(r[3]);
+            const durata = Number.parseInt(r[4]) || 60;
+            return {
+              attivita: r[1] || '',
+              oraIngresso: r[2] || '',
+              oraInizio: r[3] || '',
+              durata,
+              ingressoMin,
+              inizioMin
+            };
+          })
+          // rimuove i corsi già finiti (ingresso + durata)
+          .filter(c => Number.isFinite(c.ingressoMin) && currentTime <= (c.ingressoMin + c.durata))
+          .sort((a,b)=>a.ingressoMin - b.ingressoMin);
+
+        const coursesBox = document.getElementById('courses');
+        coursesBox.innerHTML = '';
+
+        if(parsed.length === 0){
+          coursesBox.innerHTML = `<div class="no-courses-msg">🏊‍♂️ Le attività di oggi sono terminate.<br>Ti aspettiamo domani!</div>`;
+        } else {
+          const visible = parsed.slice(0,5); // mostra massimo 5
+          visible.forEach(corso=>{
+            const timeToStart = corso.ingressoMin - currentTime;
+            let state = 'gray';
+            if(timeToStart <= 0 && timeToStart > -corso.durata) state = 'green';
+            else if(timeToStart <= 5 && timeToStart > 0) state = 'yellow';
+
+            const div = document.createElement('div');
+            div.className = `course ${state}`;
+            div.innerHTML = `
+              <div class="attivita">${corso.attivita}</div>
+              <div class="ingresso">Ingresso <span class="orario">${corso.oraIngresso}</span></div>
+              <div class="inizio">Inizio <span class="orario">${corso.oraInizio}</span></div>
+            `;
+            coursesBox.appendChild(div);
+          });
+        }
+
+        // ---------- NOTE (ticker) ----------
+        const resN = await fetch(NOTES_URL);
+        const txtN = await resN.text();
+        const jsonN = JSON.parse(txtN.substring(47).slice(0,-2));
+        const rowsN = jsonN.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ''));
+
+        const notesText = rowsN
+          .filter(r => r[0] && r[0].trim() !== '')
+          .map(r => r[0])
+          .join('  •  ') || '—';
+
+        const copy1 = document.getElementById('ticker-copy-1');
+        const copy2 = document.getElementById('ticker-copy-2');
+        copy1.textContent = notesText;
+        copy2.textContent = notesText;
+
+        // calcolo dinamico durata ticker (velocità costante)
+        requestAnimationFrame(()=> {
+          const contentWidth = copy1.offsetWidth;
+          const containerWidth = document.getElementById('ticker').offsetWidth;
+          const PIXELS_PER_SECOND = 120; // regola velocità (più alto = più veloce)
+          const distance = Math.max(contentWidth, containerWidth);
+          const durationSec = Math.max(12, distance / PIXELS_PER_SECOND);
+          const track = document.getElementById('ticker-track');
+          track.style.setProperty('--ticker-duration', `${durationSec}s`);
+        });
+
+      } catch(err){
+        console.error('Errore nel caricamento:', err);
+        document.getElementById('courses').textContent = '⚠️ Impossibile caricare i corsi.';
+        document.getElementById('ticker-copy-1').textContent = '⚠️ Impossibile caricare le note.';
+        document.getElementById('ticker-copy-2').textContent = '⚠️ Impossibile caricare le note.';
+      }
+    }
+
+    // primo load + intervalli
+    loadAll();
+    setInterval(loadAll, 60000); // aggiorna ogni minuto
+  </script>
 </body>
 </html>
