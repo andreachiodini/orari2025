@@ -85,6 +85,25 @@
       width: auto;
       object-fit: contain;
       filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+      z-index: 2; /* Assicura che il logo sia sopra */
+    }
+
+    /* --- NUOVO: SCRITTA CENTRALE --- */
+    .header-center-text {
+        position: absolute;
+        left: 50%;
+        top: 55%;
+        transform: translate(-50%, -50%);
+        font-family: 'Mountains of Christmas', cursive;
+        font-size: 85px; /* Molto grande */
+        font-weight: 700;
+        color: var(--xmas-red-bright);
+        text-shadow: 
+            2px 2px 0px white, 
+            4px 4px 0px rgba(0,0,0,0.1);
+        white-space: nowrap;
+        pointer-events: none;
+        z-index: 1;
     }
     
     .header-right {
@@ -94,6 +113,7 @@
         padding: 10px 25px;
         border-radius: 15px;
         border: 3px solid var(--xmas-red-bright);
+        z-index: 2;
     }
 
     .santa-icon {
@@ -105,10 +125,28 @@
     .datetime { 
         text-align: right; 
         color: var(--xmas-red-deep);
+        /* Font di base per la data rimane decorativo */
         font-family: 'Mountains of Christmas', cursive;
     }
-    .datetime .time { font-weight: 700; font-size: 90px; line-height: 0.8; text-shadow: 2px 2px 0px white; }
-    .datetime .date { font-weight: 700; font-size: 38px; color: var(--xmas-green); margin-top: 5px;}
+    
+    /* --- MODIFICA: OROLOGIO LEGGIBILE --- */
+    .datetime .time { 
+        font-family: 'Inter', sans-serif; /* Font pulito */
+        font-weight: 800; 
+        font-size: 85px; /* Leggermente ridimensionato per adattarsi */
+        line-height: 0.9; 
+        text-shadow: 2px 2px 0px white;
+        letter-spacing: -2px; /* Caratteri vicini */
+        font-variant-numeric: tabular-nums; /* Numeri a larghezza fissa (non ballano) */
+    }
+    
+    .datetime .date { 
+        font-weight: 700; 
+        font-size: 32px; 
+        color: var(--xmas-green); 
+        margin-top: 5px;
+        text-transform: capitalize;
+    }
 
     /* ====== CONTENUTO ====== */
     .container {
@@ -282,6 +320,8 @@
   <header>
     <img src="CF Lampugnano blu xl.png" alt="Logo Piscina" onerror="this.style.display='none'; document.write('<h2 style=\'color:#b3000c; font-size:50px\'>Piscina Lampugnano</h2>')"/>
     
+    <div class="header-center-text">Buone Feste</div>
+
     <div class="header-right">
         <span class="santa-icon">🎅</span>
         <div class="datetime">
@@ -310,7 +350,7 @@
     /* ====== GENERATORE NEVE PIÙ FITTA ====== */
     function createSnow() {
         const container = document.getElementById('snow-container');
-        const snowflakeCount = 50; // Aumentato numero fiocchi
+        const snowflakeCount = 50; 
         const chars = ['❄', '❅', '❆', '•', '✨']; 
 
         for (let i = 0; i < snowflakeCount; i++) {
@@ -318,13 +358,12 @@
             el.className = 'snowflake';
             el.textContent = chars[Math.floor(Math.random() * chars.length)];
             el.style.left = Math.random() * 100 + 'vw';
-            // Velocità e dimensioni variabili per profondità
-            const duration = Math.random() * 5 + 5; // 5-10s
+            const duration = Math.random() * 5 + 5; 
             el.style.animationDuration = duration + 's'; 
-            const size = Math.random() * 25 + 15; // 15-40px
+            const size = Math.random() * 25 + 15; 
             el.style.fontSize = size + 'px';
-            el.style.zIndex = Math.round(Math.random() * 100); // Profondità Z
-            el.style.animationDelay = '-' + (Math.random() * 10) + 's'; // Inizia già a metà
+            el.style.zIndex = Math.round(Math.random() * 100); 
+            el.style.animationDelay = '-' + (Math.random() * 10) + 's'; 
             container.appendChild(el);
         }
     }
@@ -343,7 +382,7 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    /* ====== UTILS & CARICAMENTO (Stessa logica solida) ====== */
+    /* ====== UTILS & CARICAMENTO ====== */
     function normalizeStr(str) {
       if (!str) return "";
       return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
