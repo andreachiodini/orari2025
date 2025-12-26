@@ -2,151 +2,50 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <title>Orari Piscina - Natale Esplosivo</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
+  <title>Orari Piscina Lampugnano</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <style>
     :root {
-      --xmas-red-deep: #8b0000;    /* Rosso Scuro Sfondo */
-      --xmas-red-bright: #d32f2f;  /* Rosso Acceso per accenti */
-      --xmas-green: #1b5e20;       /* Verde Abete scuro */
-      --xmas-gold: #ffd700;        /* Oro brillante */
-      --xmas-gold-dark: #c5a600;   /* Oro scuro per ombre */
-      --xmas-cream: #fffaf0;       /* Bianco crema caldo */
-      --header-height: 160px;
-      --footer-height: 90px;
+      --primary-color: #003366;
+      --bg-color: #f0f8ff;
+      --header-height: 140px;
+      --footer-height: 80px;
     }
 
     body {
-      font-family: "Inter", sans-serif;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       margin: 0;
-      /* SFONDO MARCATO: Gradiente rosso + Pattern Fiocchi di Neve SVG */
-      background-color: var(--xmas-red-deep);
-      background-image: 
-        radial-gradient(circle at 50% 30%, rgba(211, 47, 47, 0.4) 0%, rgba(139, 0, 0, 0.8) 80%),
-        url('data:image/svg+xml;utf8,<svg width="100" height="100" transform="scale(2)" opacity="0.1" xmlns="http://www.w3.org/2000/svg"><path d="M50 0 L50 100 M0 50 L100 50 M15 15 L85 85 M85 15 L15 85" stroke="white" stroke-width="2"/></svg>');
-      color: #333;
+      background-color: var(--bg-color);
+      color: var(--primary-color);
+      letter-spacing: -0.5px;
       display: flex;
       flex-direction: column;
       height: 100vh;
-      overflow: hidden;
+      overflow: hidden; /* Evita scrollbar indesiderate su monitor TV */
     }
 
-    /* ====== EFFETTO NEVE IN PRIMO PIANO ====== */
-    #snow-container {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 9999;
-    }
-    .snowflake {
-      position: absolute;
-      color: #fff;
-      text-shadow: 0 0 5px rgba(255,255,255,0.8);
-      opacity: 0.9;
-      animation: fall linear infinite;
-    }
-    @keyframes fall {
-      to { transform: translateY(110vh) rotate(360deg); }
-    }
-
-    /* ====== HEADER FESTIVO ====== */
+    /* ====== HEADER ====== */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: var(--xmas-cream);
-      padding: 10px 40px 0 40px;
+      background-color: #ffffff;
+      padding: 0 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       height: var(--header-height);
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 1000;
-      /* Effetto Neve sul bordo superiore */
-      border-top: 15px solid white; 
-      border-radius: 0 0 20px 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
     }
-
-    /* Decorazioni appese sotto l'header */
-    header::after {
-        content: '🎁 ✨ 🎄 🔔 🎄 ✨ 🎁';
-        position: absolute;
-        bottom: -35px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 45px;
-        text-shadow: 0 5px 10px rgba(0,0,0,0.4);
-    }
-
     header img {
-      height: 65%;
+      height: 70%; /* Adatta l'immagine all'altezza header */
       width: auto;
       object-fit: contain;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-      z-index: 2; /* Assicura che il logo sia sopra */
     }
-
-    /* --- NUOVO: SCRITTA CENTRALE --- */
-    .header-center-text {
-        position: absolute;
-        left: 50%;
-        top: 55%;
-        transform: translate(-50%, -50%);
-        font-family: 'Mountains of Christmas', cursive;
-        font-size: 85px; /* Molto grande */
-        font-weight: 700;
-        color: var(--xmas-red-bright);
-        text-shadow: 
-            2px 2px 0px white, 
-            4px 4px 0px rgba(0,0,0,0.1);
-        white-space: nowrap;
-        pointer-events: none;
-        z-index: 1;
-    }
-    
-    .header-right {
-        display: flex;
-        align-items: center;
-        background: rgba(255,255,255,0.5);
-        padding: 10px 25px;
-        border-radius: 15px;
-        border: 3px solid var(--xmas-red-bright);
-        z-index: 2;
-    }
-
-    .santa-icon {
-        font-size: 70px;
-        margin-right: 20px;
-        filter: drop-shadow(0 4px 4px rgba(0,0,0,0.2));
-    }
-
-    .datetime { 
-        text-align: right; 
-        color: var(--xmas-red-deep);
-        /* Font di base per la data rimane decorativo */
-        font-family: 'Mountains of Christmas', cursive;
-    }
-    
-    /* --- MODIFICA: OROLOGIO LEGGIBILE --- */
-    .datetime .time { 
-        font-family: 'Inter', sans-serif; /* Font pulito */
-        font-weight: 800; 
-        font-size: 85px; /* Leggermente ridimensionato per adattarsi */
-        line-height: 0.9; 
-        text-shadow: 2px 2px 0px white;
-        letter-spacing: -2px; /* Caratteri vicini */
-        font-variant-numeric: tabular-nums; /* Numeri a larghezza fissa (non ballano) */
-    }
-    
-    .datetime .date { 
-        font-weight: 700; 
-        font-size: 32px; 
-        color: var(--xmas-green); 
-        margin-top: 5px;
-        text-transform: capitalize;
-    }
+    .datetime { text-align: right; line-height: 1.1; }
+    .datetime .time { font-weight: 700; font-size: 75px; letter-spacing: -2px; }
+    .datetime .date { font-weight: 500; font-size: 38px; color: #004080; text-transform: capitalize; }
 
     /* ====== CONTENUTO ====== */
     .container {
@@ -155,132 +54,86 @@
       justify-content: center;
       align-items: center;
       padding: 20px;
-      margin-top: calc(var(--header-height) + 40px); /* Spazio extra per decorazioni appese */
+      margin-top: var(--header-height);
       margin-bottom: var(--footer-height);
+      overflow-y: hidden; /* Niente scroll manuale */
     }
     #courses {
       width: 100%;
-      max-width: 1650px;
+      max-width: 1700px;
       display: flex;
       flex-direction: column;
-      gap: 30px;
-      z-index: 1;
+      justify-content: center;
+      gap: 25px; /* Spazio tra i box */
     }
 
-    /* ====== CORSI CARD STILE REGALO ====== */
+    /* ====== CORSI ====== */
     .course {
       display: flex;
-      border-radius: 20px;
+      border-radius: 12px;
       overflow: hidden;
-      /* Sfondo crema caldo */
-      background-color: var(--xmas-cream);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 0 20px rgba(255,215,0,0.1);
+      background-color: #fff;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
       width: 100%;
       position: relative;
-      /* BORDO CANDY CANE (Bastoncino di zucchero) */
-      border: 8px solid transparent;
-      background-image: linear-gradient(var(--xmas-cream), var(--xmas-cream)), 
-                        repeating-linear-gradient(45deg, var(--xmas-red-bright), var(--xmas-red-bright) 20px, white 20px, white 40px);
-      background-origin: border-box;
-      background-clip: content-box, border-box;
+      transition: all 0.3s ease;
     }
-    
     .course > div {
-      padding: 25px 35px;
+      padding: 20px 25px;
       display: flex;
       align-items: center;
     }
-
     .course .attivita {
       flex: 2;
-      font-size: 60px;
-      font-weight: 800;
-      color: var(--xmas-red-deep);
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+      font-size: 55px;
+      font-weight: 700;
+      color: var(--primary-color);
     }
-    /* Aggiunge un piccolo cappellino all'attività */
-    .course .attivita::before { content: "🎅 "; font-size: 0.8em; }
-
     .course .dettagli {
-      flex: 1.3;
+      flex: 1.2;
       display: flex;
       justify-content: space-around;
-      /* Sfondo dorato chiaro per i dettagli */
-      background: linear-gradient(to bottom, #fffbe0, #fff3cd);
-      border-left: 4px dotted var(--xmas-gold-dark);
+      background-color: rgba(0,0,0,0.03);
+      border-left: 1px solid rgba(0,0,0,0.05);
     }
-    
     .info-box {
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
     }
-    .info-label { 
-        font-size: 22px; 
-        text-transform: uppercase; 
-        color: var(--xmas-green);
-        font-weight: 800; 
-        letter-spacing: 1px;
-        font-family: 'Mountains of Christmas', cursive;
-    }
-    .info-time { 
-        font-size: 65px; font-weight: 800; color: #222; line-height: 1; 
-        font-family: "Inter", sans-serif;
-    }
+    .info-label { font-size: 20px; text-transform: uppercase; color: #666; font-weight: 600; margin-bottom: 5px; }
+    .info-time { font-size: 55px; font-weight: 700; color: #000; line-height: 1; }
 
-    /* --- STATI CORSI MARCATO --- */
+    /* Colori stato */
+    .green  { background-color: #d1e7dd; border-left: 15px solid #198754; }
+    .yellow { background-color: #fff3cd; border-left: 15px solid #ffc107; }
+    .gray   { background-color: #f8f9fa; border-left: 15px solid #6c757d; color: #6c757d; }
     
-    /* IN CORSO (Verde brillante con bagliore) */
-    .green .attivita { color: var(--xmas-green) !important; }
-    .green { 
-        box-shadow: 0 0 30px rgba(27, 94, 32, 0.6);
-        border-color: var(--xmas-green) !important; /* Sovrascrive candy cane */
-        background-image: none;
-        border-width: 8px;
-        background-color: #e8f5e9;
+    /* Animazione per corsi in arrivo (Giallo) */
+    .yellow { animation: pulse-border 2s infinite; }
+    @keyframes pulse-border {
+      0% { border-left-color: #ffc107; }
+      50% { border-left-color: #ffdb72; }
+      100% { border-left-color: #ffc107; }
     }
-
-    /* IN ARRIVO (Oro Pulsante) */
-    .yellow { 
-        background-color: #fffde7;
-        /* Animazione bordo dorato pulsante */
-        animation: sparkleBorder 1.5s infinite alternate;
-        background-image: none; /* Rimuovi candy cane per il bagliore */
-        border: 8px solid var(--xmas-gold);
-    }
-    @keyframes sparkleBorder {
-        from { box-shadow: 0 0 10px var(--xmas-gold), inset 0 0 10px var(--xmas-gold); }
-        to   { box-shadow: 0 0 35px var(--xmas-gold), inset 0 0 20px var(--xmas-gold); }
-    }
-
-    /* FUTURO (Standard Candy Cane, testo grigio) */
-    .gray .attivita { color: #555; }
-    .gray .info-time { color: #777; }
-    .gray .attivita::before { filter: grayscale(1); opacity: 0.7; } /* Cappellino grigio */
-
 
     /* Messaggio vuoto */
     .empty-message {
       text-align: center;
       font-size: 50px;
-      font-family: 'Mountains of Christmas', cursive;
-      font-weight: 700;
-      color: var(--xmas-red-deep);
-      background: var(--xmas-cream);
-      padding: 70px;
-      border-radius: 30px;
-      border: 10px solid var(--xmas-gold);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      font-weight: 500;
+      color: var(--primary-color);
+      background: white;
+      padding: 60px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }
-    .empty-message span { display: block; font-size: 1.5em; margin-bottom: 20px; }
 
-    /* ====== FOOTER NASTRO D'ORO ====== */
+    /* ====== FOOTER TICKER ====== */
     footer {
-      /* Gradiente metallico oro */
-      background: linear-gradient(to bottom, var(--xmas-gold), var(--xmas-gold-dark));
-      border-top: 5px solid white;
-      box-shadow: 0 -10px 20px rgba(0,0,0,0.3);
-      color: var(--xmas-red-deep);
+      background: #003366; /* Blu scuro per stacco visivo */
+      color: white;
       height: var(--footer-height);
       overflow: hidden;
       display: flex;
@@ -289,51 +142,47 @@
       bottom: 0; left: 0; right: 0;
       z-index: 1000;
     }
-    .ticker__content {
-      display: inline-block;
-      padding-right: 120px;
-      font-size: 42px;
-      font-weight: 700;
-      line-height: var(--footer-height);
-      text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
+    .ticker {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
     }
-    .ticker__content::before { content: "🦌🎄 "; }
-    .ticker__content::after { content: " 🎄🦌"; }
-
     .ticker__track {
       display: inline-block;
       white-space: nowrap;
       will-change: transform;
-      animation: ticker var(--ticker-duration, 35s) linear infinite;
+      animation: ticker var(--ticker-duration, 30s) linear infinite;
+    }
+    .ticker__content {
+      display: inline-block;
+      padding-right: 100px; /* Spazio extra tra le ripetizioni */
+      font-size: 40px;
+      font-weight: 500;
+      line-height: var(--footer-height);
     }
     @keyframes ticker {
       0%   { transform: translateX(0); }
       100% { transform: translateX(-50%); }
     }
-
   </style>
 </head>
 <body>
 
-  <div id="snow-container"></div>
-
   <header>
-    <img src="CF Lampugnano blu xl.png" alt="Logo Piscina" onerror="this.style.display='none'; document.write('<h2 style=\'color:#b3000c; font-size:50px\'>Piscina Lampugnano</h2>')"/>
-    
-    <div class="header-center-text">Buone Feste</div>
-
-    <div class="header-right">
-        <span class="santa-icon">🎅</span>
-        <div class="datetime">
-            <div class="time" id="clock">--:--</div>
-            <div class="date" id="date">--</div>
-        </div>
+    <img src="CF Lampugnano blu xl.png" alt="Logo Piscina" onerror="this.style.display='none'; document.write('<h2>Piscina Lampugnano</h2>')"/>
+    <div class="datetime">
+      <div class="time" id="clock">--:--</div>
+      <div class="date" id="date">--</div>
     </div>
   </header>
 
   <div class="container">
     <div id="courses">
-        <div class="empty-message">🎁 Caricamento orari delle feste...</div>
+        <div class="empty-message">Caricamento corsi in corso...</div>
     </div>
   </div>
 
@@ -347,51 +196,35 @@
   </footer>
 
   <script>
-    /* ====== GENERATORE NEVE PIÙ FITTA ====== */
-    function createSnow() {
-        const container = document.getElementById('snow-container');
-        const snowflakeCount = 50; 
-        const chars = ['❄', '❅', '❆', '•', '✨']; 
-
-        for (let i = 0; i < snowflakeCount; i++) {
-            const el = document.createElement('div');
-            el.className = 'snowflake';
-            el.textContent = chars[Math.floor(Math.random() * chars.length)];
-            el.style.left = Math.random() * 100 + 'vw';
-            const duration = Math.random() * 5 + 5; 
-            el.style.animationDuration = duration + 's'; 
-            const size = Math.random() * 25 + 15; 
-            el.style.fontSize = size + 'px';
-            el.style.zIndex = Math.round(Math.random() * 100); 
-            el.style.animationDelay = '-' + (Math.random() * 10) + 's'; 
-            container.appendChild(el);
-        }
-    }
-    createSnow();
-
     /* ====== OROLOGIO ====== */
     function updateClock() {
       const now = new Date();
       const h = now.getHours().toString().padStart(2, '0');
       const m = now.getMinutes().toString().padStart(2, '0');
-      const options = { weekday: 'long', day: 'numeric', month: 'long' };
+      
+      const options = { weekday: 'long', year: 'numeric', month: '2-digit', day: '2-digit' };
+      // Forza locale italiano
       const dateStr = now.toLocaleDateString('it-IT', options); 
+      
       document.getElementById("clock").textContent = `${h}:${m}`;
       document.getElementById("date").textContent  = dateStr;
     }
     setInterval(updateClock, 1000);
     updateClock();
 
-    /* ====== UTILS & CARICAMENTO ====== */
+    /* ====== UTILS ====== */
+    // Rimuove accenti per confronto giorni (lunedì == lunedi)
     function normalizeStr(str) {
       if (!str) return "";
       return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
     }
+
     function parseTime(t) {
       if (!t || typeof t !== 'string' || !t.includes(':')) return NaN;
       const [h, m] = t.split(":").map(Number);
       return (h * 60) + m;
     }
+
     function formatCell(cell) {
       if (!cell) return "";
       if (cell.f) return cell.f;
@@ -400,13 +233,18 @@
       return "";
     }
 
+    /* ====== CARICAMENTO DATI ====== */
+    // Variabile globale per evitare flash se i dati non cambiano
+    let lastCoursesHash = ""; 
+
     async function loadAll() {
       const SHEET_ID = '1dcs1X7x84g69f14m9Sl2KmqZUbCI6lLBBfi3QCMNqWI';
       const SHEET_BASE = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=`;
       
       try {
+        /* ---- FETCH CORSI ---- */
         const resC = await fetch(SHEET_BASE + 'Corsi');
-        if (!resC.ok) throw new Error("Errore rete");
+        if (!resC.ok) throw new Error("Network response was not ok");
         const txtC = await resC.text();
         const jsonC = JSON.parse(txtC.substring(47).slice(0, -2));
         const rowsC = jsonC.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ""));
@@ -415,8 +253,9 @@
         const currentTime = now.getHours() * 60 + now.getMinutes();
         const todayName = normalizeStr(now.toLocaleDateString('it-IT', { weekday: 'long' }));
 
+        // Filtra e Mappa
         let parsed = rowsC
-          .filter(r => normalizeStr(r[0]) === todayName)
+          .filter(r => normalizeStr(r[0]) === todayName) // Usa normalizeStr per sicurezza
           .map(r => {
             const ingressoMin = parseTime(r[2]);
             const inizioMin   = parseTime(r[3]);
@@ -430,49 +269,60 @@
               inizioMin
             };
           })
-          .filter(c => Number.isFinite(c.ingressoMin) && currentTime <= (c.ingressoMin + c.durata))
+          .filter(c => Number.isFinite(c.ingressoMin) && currentTime <= (c.ingressoMin + c.durata)) // Mostra finché non finisce
           .sort((a, b) => a.ingressoMin - b.ingressoMin);
 
         renderCourses(parsed, currentTime);
 
+        /* ---- FETCH NOTE (TICKER) ---- */
         const resN = await fetch(SHEET_BASE + 'Note');
         const txtN = await resN.text();
         const jsonN = JSON.parse(txtN.substring(47).slice(0, -2));
         const rowsN = jsonN.table.rows.map(r => r.c.map(c => c ? formatCell(c) : ""));
+
         const notesText = rowsN
           .filter(r => r[0] && r[0].trim() !== '')
           .map(r => r[0])
           .join("  •  ");
 
-        updateTicker(notesText || 'Buone Feste dalla Piscina Lampugnano! 🎅');
+        updateTicker(notesText || 'Benvenuti alla Piscina Lampugnano');
 
       } catch (err) {
         console.error('Errore update:', err);
+        // Non mostrare errore a video se c'è già contenuto caricato, tieni il vecchio.
+        // Se è vuoto, mostra errore.
         const box = document.getElementById('courses');
         if (!box.children.length || box.innerText.includes('Caricamento')) {
-           box.innerHTML = `<div class="empty-message" style="color:red">⚠️ Connessione interrotta...</div>`;
+           box.innerHTML = `<div class="empty-message">⚠️ Riconnessione in corso...</div>`;
         }
       }
     }
 
     function renderCourses(courses, currentTime) {
         const coursesBox = document.getElementById('courses');
+        
+        // Creiamo l'HTML in una variabile temp
         let htmlContent = '';
 
         if (courses.length === 0) {
            htmlContent = `
             <div class="empty-message">
-              <span>🦌 Hohōho!</span>
-              Le attività di oggi sono terminate.<br>
-              <span style="font-size:35px; margin-top:20px; color:#b3000c">A domani!</span>
+              🏊‍♂️ Le attività di oggi sono terminate.<br>
+              <span style="font-size:30px; color:#666">Vi aspettiamo domani!</span>
             </div>`;
         } else {
-          const visible = courses.slice(0, 5);
+          const visible = courses.slice(0, 5); // Max 5 righe per non uscire dallo schermo
+          
           visible.forEach(corso => {
             const timeToStart = corso.ingressoMin - currentTime;
-            let style = 'gray'; 
-            if (timeToStart <= 0 && timeToStart > -corso.durata) style = 'green';
-            else if (timeToStart <= 15 && timeToStart > 0) style = 'yellow';
+            
+            // Logica stati
+            let style = 'gray'; // Default: Futuro
+            if (timeToStart <= 0 && timeToStart > -corso.durata) {
+                style = 'green'; // In corso
+            } else if (timeToStart <= 15 && timeToStart > 0) {
+                style = 'yellow'; // Inizio tra 15 min
+            }
 
             htmlContent += `
               <div class="course ${style}">
@@ -491,6 +341,9 @@
             `;
           });
         }
+
+        // Aggiorna il DOM solo se è cambiato qualcosa (o se vuoi forzare refresh)
+        // Qui sostituiamo brutalmente, ma essendo testo semplice è molto veloce.
         coursesBox.innerHTML = htmlContent;
     }
 
@@ -498,17 +351,25 @@
         const copy1 = document.getElementById('ticker-copy-1');
         const copy2 = document.getElementById('ticker-copy-2');
         const track = document.getElementById('ticker-track');
+        
+        // Se il testo è lo stesso, non ricalcolare animazione (evita scatti)
         if (copy1.textContent === text) return;
+
         copy1.textContent = text;
         copy2.textContent = text;
+
+        // Calcolo velocità basata sulla lunghezza del testo
+        // Più lungo è il testo, più tempo serve
         requestAnimationFrame(() => {
             const width = copy1.offsetWidth;
-            const duration = Math.max(25, width / 120); 
+            const duration = Math.max(20, width / 100); // Circa 100px al secondo
             track.style.setProperty('--ticker-duration', `${duration}s`);
         });
     }
 
+    // Avvio
     loadAll();
+    // Aggiorna ogni 30 secondi per essere più reattivo
     setInterval(loadAll, 30000); 
   </script>
 </body>
